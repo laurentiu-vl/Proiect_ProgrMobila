@@ -6,4 +6,5 @@
         <item name="cornerRadius">25dp</item>
         <item name="android:textSize">22sp</item>
     </style>
+
 </resources>

@@ -10,8 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FrankTheFrog">
         <activity
+            android:name=".PlayActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Options"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
