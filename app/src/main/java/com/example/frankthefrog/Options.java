@@ -41,6 +41,7 @@ public class Options extends AppCompatActivity {
         });
 
         back.setOnClickListener(view -> {
+           // Intent intent = new Intent(Options.this, MainActivity.class);
             Intent intent = getIntent();
             intent.putExtra("sound", hasSound);
             intent.putExtra("music", hasMusic);

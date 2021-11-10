@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
@@ -46,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == REQUEST_CODE) {
             assert data != null;
-          //  String message = data.getStringExtra("message_back");
+            boolean hasMusic = data.getBooleanExtra("sound", false);
+            boolean hasSound = data.getBooleanExtra("music", false);
+            Log.d("Main", "hasMusic: " + hasMusic);
+            Log.d("Main", "hasSound: " + hasSound);
             Toast.makeText(MainActivity.this, "Back to the main activity", Toast.LENGTH_LONG).show();
         }
     }

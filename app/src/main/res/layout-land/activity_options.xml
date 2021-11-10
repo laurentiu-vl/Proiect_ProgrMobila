@@ -7,84 +7,122 @@
     android:layout_height="match_parent"
     app:columnOrderPreserved="false"
     tools:context=".Options"
-    android:background="@drawable/optionstate">
+    android:background="@drawable/optionscreen">
 
-    <ImageView
-        android:id="@+id/shoeColorSwapRight"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+    <TableLayout
+        android:layout_width="303dp"
+        android:layout_height="195dp"
+        android:background="@color/yellow"
+        android:paddingStart="15dp"
+
+        android:paddingEnd="15dp"
+        android:stretchColumns="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.916"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.613"
-        app:srcCompat="@drawable/right_arrow" />
+        app:layout_constraintVertical_bias="0.396">
 
-    <ImageView
-        android:id="@+id/jacketColorSwipeRight"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.916"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.357"
-        app:srcCompat="@drawable/right_arrow" />
 
-    <ImageView
-        android:id="@+id/pantsColorSwipeRight"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.916"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.482"
-        app:srcCompat="@drawable/right_arrow" />
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
 
-    <ImageView
-        android:id="@+id/jacketColorSwipeLeft"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.357"
-        app:srcCompat="@drawable/left_arrow" />
 
-    <ImageView
-        android:id="@+id/pantsColorSwipeLeft"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.482"
-        app:srcCompat="@drawable/left_arrow" />
+            <ImageView
+                android:id="@+id/eyeColorSwipeLeft"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_gravity="start"
+                app:srcCompat="@drawable/left_arrow" />
 
-    <ImageView
-        android:id="@+id/shoeColorSwipeLeft"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.613"
-        app:srcCompat="@drawable/left_arrow" />
+            <ImageView
+                android:id="@+id/eyeColorSwipeRight"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="3"
+                android:layout_gravity="end"
+                app:srcCompat="@drawable/right_arrow" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/jacketColorSwipeLeft"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_gravity="start"
+                app:srcCompat="@drawable/left_arrow" />
+
+            <ImageView
+                android:id="@+id/jacketColorSwipeRight"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="3"
+                android:layout_gravity="end"
+                app:srcCompat="@drawable/right_arrow" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/pantsColorSwipeLeft"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_gravity="start"
+                app:srcCompat="@drawable/left_arrow" />
+
+            <ImageView
+                android:id="@+id/pantsColorSwipeRight"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="3"
+                android:layout_gravity="end"
+                app:srcCompat="@drawable/right_arrow" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/shoeColorSwipeLeft"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_gravity="start"
+                app:srcCompat="@drawable/left_arrow" />
+
+            <ImageView
+                android:id="@+id/shoeColorSwapRight"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_column="3"
+                android:layout_gravity="end"
+                app:srcCompat="@drawable/right_arrow" />
+        </TableRow>
+    </TableLayout>
 
     <CheckBox
         android:id="@+id/soundOption"
         style="@style/optionButtonStyle"
         android:text="@string/option1"
+        android:textColor="@color/purple_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.075"
@@ -99,6 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/option2"
+        android:textColor="@color/purple_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.074"
@@ -113,6 +152,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/option4"
+        android:textColor="@color/purple_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.099"
@@ -127,6 +167,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/option3"
+        android:textColor="@color/purple_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"
@@ -143,7 +184,7 @@
         android:fontFamily="@font/croissant_one"
         android:gravity="center"
         android:text="@string/optionsTitle"
-        android:textColor="@color/white"
+        android:textColor="@color/purple_700"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -162,29 +203,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.928" />
-
-    <ImageView
-        android:id="@+id/eyeColorSwipeLeft"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.229"
-        app:srcCompat="@drawable/left_arrow" />
-
-    <ImageView
-        android:id="@+id/eyeColorSwipeRight"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.916"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.229"
-        app:srcCompat="@drawable/right_arrow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

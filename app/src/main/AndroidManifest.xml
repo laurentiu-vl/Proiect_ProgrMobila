@@ -11,10 +11,12 @@
         android:theme="@style/Theme.FrankTheFrog">
         <activity
             android:name=".PlayActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Options"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
