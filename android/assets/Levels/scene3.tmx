@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="25" height="13" tilewidth="80" tileheight="80" infinite="0" nextlayerid="9" nextobjectid="40">
+ <tileset firstgid="1" name="fileName" tilewidth="80" tileheight="80" tilecount="72" columns="12">
+  <image source="fileName.png" width="1024" height="512"/>
+ </tileset>
+ <layer id="2" name="Background" width="25" height="13">
+  <data encoding="base64" compression="zlib">
+   eJyVlNsNBSEIRI0N0MBtwAJoQPrvaffDSWYngLkfkxgDHB7iHmM4KY6MNF+to6Az9CNZoi3+IUw/NhBs4GfkD3tlqi/yZLtdcII4JhwTBueP85R6wUMc5XGfuB7cRSPMYyYxkHvm5+ObI+rd1JvKz5u4XBPbMgMc5J31n2dezSjrBd6Fxp40B43fxdTZmnAWcW6zynqm/GxfVlI/34HvDRu2eC/VXuq+qbK/oWN1uvU9y+NfBu/fTZX/A/TGOwQ=
+  </data>
+ </layer>
+ <layer id="3" name="Graphics" width="25" height="13">
+  <data encoding="base64" compression="zlib">
+   eJydUkEOgzAMy2Fnxo7Txo7R2HGV2Amp/P9TGyKRTHA7QSSL0KS2m1akHJdK7VOp7YlHpdYf5Iy+W9KTf1DL3wc0ou8z6UkG11LSc0Sjdi8eKusz7tWI6y/Ie+P18zHtuWewb5x/ScO93mW5kxK3klqcv/9H7QF4mP+4jrMuaeB6Z97RYxf2Of9kwDk4V0M0RvCIPrNs39cE+TNo4HtvQGM0ZMNV+B24B9S5yTJrlbUXJWgBM/8pcDtn+oMMSOCXASMTYHwBLGkVRA==
+  </data>
+ </layer>
+ <objectgroup id="4" name="Bricks">
+  <object id="2" x="-14.0094" y="882.594" width="334.225" height="72.0485"/>
+  <object id="3" x="400" y="880" width="400" height="80"/>
+  <object id="4" x="720" y="800" width="80" height="80"/>
+  <object id="5" x="800" y="720" width="80" height="80"/>
+  <object id="6" x="960" y="720" width="160" height="80"/>
+  <object id="7" x="1120" y="640" width="80" height="80"/>
+  <object id="8" x="1200" y="560" width="80"/>
+  <object id="9" x="1040" y="480" width="80" height="80"/>
+  <object id="10" x="1360" y="400" width="80" height="80"/>
+  <object id="11" x="1440" y="320" width="80" height="80"/>
+  <object id="12" x="1280" y="240" width="80" height="80"/>
+  <object id="13" x="1040" y="160" width="80" height="80"/>
+  <object id="14" x="1600" y="320" width="80" height="80"/>
+  <object id="15" x="1920" y="400" width="80" height="80"/>
+  <object id="16" x="1760" y="480" width="160" height="80"/>
+  <object id="17" x="1680" y="560" width="80" height="80"/>
+  <object id="18" x="1360" y="720" width="160" height="80"/>
+  <object id="19" x="1600" y="800" width="80" height="80"/>
+  <object id="20" x="1680" y="880" width="320" height="80"/>
+ </objectgroup>
+ <objectgroup id="5" name="Coins">
+  <object id="23" x="400" y="720" width="80" height="80"/>
+  <object id="24" x="480" y="800" width="80" height="80"/>
+  <object id="25" x="960" y="640" width="80" height="80"/>
+  <object id="26" x="1040" y="400" width="80" height="80"/>
+  <object id="27" x="1120" y="0" width="80" height="80"/>
+  <object id="28" x="1360" y="640" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="6" name="Jumpers">
+  <object id="29" x="240" y="800" width="80" height="80"/>
+  <object id="30" x="1040" y="640" width="80" height="80"/>
+  <object id="31" x="1280" y="480" width="80" height="80"/>
+  <object id="32" x="1200" y="160" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="8" name="Spikes">
+  <object id="33" x="320" y="960" width="160" height="80"/>
+  <object id="34" x="240" y="960" width="80" height="80"/>
+  <object id="35" x="1360" y="960" width="320" height="80"/>
+  <object id="36" x="1280" y="720" width="80" height="80"/>
+  <object id="37" x="1120" y="240" width="80" height="80"/>
+  <object id="38" x="960" y="160" width="80" height="80"/>
+  <object id="39" x="1520" y="320" width="80" height="80"/>
+ </objectgroup>
+</map>

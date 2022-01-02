@@ -6,11 +6,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Screens.PlayScreen;
@@ -19,32 +17,22 @@ public abstract class InteractiveTileObject {
     protected World world;
     protected TiledMap map;
     protected Rectangle bounds;
-    protected Body body;
+    public Body body;
     protected Fixture fixture;
     protected PlayScreen screen;
     protected MapObject object;
 
-    public InteractiveTileObject(PlayScreen screen, MapObject object) {
+    public InteractiveTileObject(PlayScreen screen, MapObject object, Body body, FixtureDef fdef) {
         this.screen = screen;
         this.world = screen.getWorld();
         this.map = screen.getMap();
         this.object = object;
         this.bounds = ((RectangleMapObject) object).getRectangle();
-
-        BodyDef bdef = new BodyDef();
-        FixtureDef fdef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-
-        bdef.type = BodyDef.BodyType.StaticBody;
-        bdef.position.set((bounds.getX() + bounds.getWidth() / 2) / Frank.PPM, ((bounds.getY() + bounds.getHeight() / 2) / Frank.PPM));
-        body = world.createBody(bdef);
-
-        shape.setAsBox(bounds.getWidth() / 2 / Frank.PPM, bounds.getHeight() / 2 / Frank.PPM);
-        fdef.shape = shape;
-        fixture = body.createFixture(fdef);
+        this.body = body;
+        this.fixture = body.createFixture(fdef);
     }
 
-    public abstract void onHit(Player player);
+    public abstract void onHit();
 
     public void setCategoryFilter(short filterBit) {
         Filter filter = new Filter();
@@ -52,8 +40,8 @@ public abstract class InteractiveTileObject {
         fixture.setFilterData(filter);
     }
 
-    public TiledMapTileLayer.Cell getCell() {
-      TiledMapTileLayer layer =  (TiledMapTileLayer)map.getLayers().get(1);
-      return layer.getCell((int)(body.getPosition().x * Frank.PPM / 80), (int)(body.getPosition().y * Frank.PPM / 80));
+    public void removeTile() {
+        TiledMapTileLayer layer =  (TiledMapTileLayer)map.getLayers().get(1);
+        layer.getCell((int)(body.getPosition().x * Frank.PPM / 80), (int)(body.getPosition().y * Frank.PPM / 80)).setTile(null);
     }
 }

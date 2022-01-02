@@ -1,5 +1,6 @@
 package com.frankthefrog.game.Scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.frankthefrog.game.Frank;
+import com.frankthefrog.game.Sprites.Player;
 
 public class HUD implements Disposable {
     public Stage stage;
@@ -22,51 +24,94 @@ public class HUD implements Disposable {
 
     private Integer worldTimer;
     private float timeCount;
-    private static Integer score;
-    private static Label scoreLabel;
-    Label countdownLabel, timeLabel, levelLabel, worldLabel, gameLabel;
+    private static Integer score, lives;
+    private static Float energy;
+    private static Label scoreLabel, energyLabel, livesLabel;
+    private final Label timeLabel;
 
+    @SuppressWarnings("DefaultLocale")
     public HUD(SpriteBatch sb) {
-        worldTimer = 300;
+        worldTimer = score = 0;
         timeCount = 0;
-        score = 0;
+        energy = 100.f;
+        lives = 3;
 
-        Viewport viewport = new FitViewport(Frank.V_WIDTH, Frank.V_HEIGHT, new OrthographicCamera());
+        Viewport viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage =  new Stage(viewport, sb);
+        Gdx.input.setInputProcessor(stage);
 
-        Table table = new Table();
-        table.top();
-        table.setFillParent(true);
+        Table labelTable = new Table();
+        labelTable.top();
+        labelTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE) );
-        levelLabel = new Label("1",  new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        worldLabel = new Label("Level", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        gameLabel = new Label("Score", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(3);
 
-        table.add(gameLabel).expandX().padTop(10);
-        table.add(worldLabel).expandX().padTop(10);
-        table.add(timeLabel).expandX().padTop(10);
-        table.row();
-        table.add(scoreLabel).expandX();
-        table.add(levelLabel).expandX();
-        table.add(countdownLabel).expandX();
+        /* Time Label */
+        Label timeTextLabel = new Label("TIME", new Label.LabelStyle(font, Color.WHITE));
+        timeLabel = new Label(String.format("%04d", worldTimer), new Label.LabelStyle(font, Color.WHITE));
 
-        stage.addActor(table);
+        /* Score Label  */
+        scoreLabel = new Label(String.format("%04d", score), new Label.LabelStyle(font, Color.WHITE));
+        Label scoreTextLabel = new Label("SCORE", new Label.LabelStyle(font, Color.WHITE));
+
+        /* Energy Label */
+        Label energyTextLabel = new Label("ENERGY", new Label.LabelStyle(font, Color.WHITE));
+        energyLabel = new Label(String.format("%03d", Math.round(energy)), new Label.LabelStyle(font, Color.WHITE));
+
+        /* Lives Label */
+        Label livesTextLabel = new Label("LIVES", new Label.LabelStyle(font, Color.WHITE));
+        livesLabel = new Label(String.format("%02d", lives), new Label.LabelStyle(font, Color.WHITE));
+
+        labelTable.add(timeTextLabel).expandX().padTop(15);
+        labelTable.add(scoreTextLabel).expandX().padTop(15);
+        labelTable.add(energyTextLabel).expandX().padTop(15);
+        labelTable.add(livesTextLabel).expandX().padTop(15);
+        labelTable.row();
+        labelTable.add(timeLabel).expandX();
+        labelTable.add(scoreLabel).expandX();
+        labelTable.add(energyLabel).expandX();
+        labelTable.add(livesLabel).expandX();
+        stage.addActor(labelTable);
     }
 
-    public void Update(float dt) {
+
+    @SuppressWarnings("DefaultLocale")
+    public void update(float dt) {
         timeCount += dt;
         if(timeCount >= 1) {
             worldTimer++;
-            countdownLabel.setText(String.format("%03d", worldTimer));
+            timeLabel.setText(String.format("%04d", worldTimer));
             timeCount = 0;
+        }
+
+        if(lives <= 0 || energy <= 0.f) { // Game Over
+           Player.isDead = true;
         }
     }
 
+    @SuppressWarnings("DefaultLocale")
     public static void addScore(int value) {
         score += value;
-        scoreLabel.setText(String.format("%06d", score));
+        scoreLabel.setText(String.format("%04d", score));
+    }
+
+
+    @SuppressWarnings("DefaultLocale")
+    public static void addEnergy(float energyValue) {
+        energy += energyValue;
+        energyLabel.setText(String.format("%04d", Math.round(energy)));
+    }
+
+    @SuppressWarnings("DefaultLocale")
+    public static void addLife() {
+        lives++;
+        livesLabel.setText(String.format("%02d", Math.round(lives)));
+    }
+
+    @SuppressWarnings("DefaultLocale")
+    public static void removeLife() {
+        lives--;
+        livesLabel.setText(String.format("%02d", Math.round(lives)));
     }
 }

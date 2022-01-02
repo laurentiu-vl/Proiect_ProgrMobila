@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="23" height="13" tilewidth="80" tileheight="80" infinite="0" nextlayerid="30" nextobjectid="148">
+ <tileset firstgid="1" name="fileName" tilewidth="80" tileheight="80" tilecount="72" columns="12">
+  <image source="fileName.png" width="1024" height="512"/>
+ </tileset>
+ <layer id="16" name="Background" width="23" height="13">
+  <data encoding="base64" compression="zlib">
+   eJwzZWBgMKURdoRiVySMzCfVPGR9jngwJW6lhdnY7EEPG0rMHophMtTMdsWiF1vaJsdsbO5CTxvY0o0jEfbiMpscjG62GlRcDYrJMVsNB8ZmNwCnz0PZ
+  </data>
+ </layer>
+ <layer id="17" name="Graphics" width="23" height="13">
+  <data encoding="base64" compression="zlib">
+   eJy1k0FTwkAMhSNwpuCtOPVGEW92HT0phcL//0smw3vjM67cfDNvQtPdb5OlOZjZ4Z+9sG89uV/c7+6L+xX5xn3C7627Q9y777A29Czctf3Ug/vTfQQ3eJPwG1nLs8gPfQj70b1Evk9eIT+BuaqsCc9xDp+VfZZet+iPPTYpFsR7xBZxjj2LxO7st46oN+oZpP8WXJpnTbJX2RR7Ipt7elmT6y44m1pW2Pp+AHtAryF+J2TNEEuq6SzsPr2zlBuTi6zt8Rx3zP+nE3aRPqlW8jVTb5W9ZvW5ofid7Ow6SzvJXXAfs8q+0CDsW9rYdZY2fzBYe2is1D3ecL732tzorKi/AHzWKCM=
+  </data>
+ </layer>
+ <objectgroup id="18" name="Coins">
+  <object id="74" x="160" y="240" width="80" height="80">
+   <properties>
+    <property name="bronze" value=""/>
+   </properties>
+  </object>
+  <object id="75" x="160" y="320" width="80" height="80">
+   <properties>
+    <property name="silver" value=""/>
+   </properties>
+  </object>
+  <object id="76" x="160" y="400" width="80" height="80">
+   <properties>
+    <property name="gold" value=""/>
+   </properties>
+  </object>
+  <object id="77" x="1200" y="80" width="80" height="80">
+   <properties>
+    <property name="gold" value=""/>
+   </properties>
+  </object>
+  <object id="78" x="1680" y="480" width="80" height="80">
+   <properties>
+    <property name="bronze" value=""/>
+   </properties>
+  </object>
+  <object id="79" x="1680" y="560" width="80" height="80">
+   <properties>
+    <property name="silver" value=""/>
+   </properties>
+  </object>
+  <object id="80" x="1680" y="640" width="80" height="80">
+   <properties>
+    <property name="gold" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="19" name="Bricks">
+  <object id="81" x="0" y="0" width="160" height="800"/>
+  <object id="82" x="0" y="800" width="80" height="240"/>
+  <object id="83" x="160" y="640" width="160" height="80"/>
+  <object id="84" x="160" y="720" width="80" height="80"/>
+  <object id="85" x="480" y="640" width="240" height="160"/>
+  <object id="87" x="1040" y="320" width="80" height="400"/>
+  <object id="89" x="1040" y="240" width="400" height="80"/>
+  <object id="90" x="1360" y="320" width="80" height="480"/>
+  <object id="92" x="640" y="960" width="240" height="80"/>
+  <object id="93" x="960" y="960" width="880" height="80"/>
+  <object id="94" x="1440" y="880" width="80" height="80"/>
+  <object id="95" x="1600" y="880" width="240" height="80"/>
+  <object id="96" x="160" y="0" width="1680" height="80"/>
+  <object id="97" x="1760" y="80" width="80" height="800"/>
+  <object id="98" x="1600" y="240" width="160" height="80"/>
+  <object id="99" x="1440" y="560" width="160" height="80"/>
+  <object id="100" x="800" y="480" width="80" height="80"/>
+  <object id="101" x="320" y="240" width="320" height="80"/>
+  <object id="102" x="480" y="80" width="80" height="160"/>
+  <object id="136" x="720" y="720" width="400" height="80"/>
+  <object id="137" x="1120" y="640" width="80" height="80"/>
+  <object id="138" x="1280" y="640" width="80" height="80"/>
+  <object id="147" x="320" y="480" width="160" height="80"/>
+ </objectgroup>
+ <objectgroup id="20" name="Boxes">
+  <object id="104" x="1680" y="160" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="21" name="Trampoline">
+  <object id="105" x="240" y="560" width="80" height="80"/>
+  <object id="106" x="480" y="560" width="80" height="80"/>
+  <object id="108" x="640" y="560" width="80" height="80"/>
+  <object id="109" x="800" y="400" width="80" height="80"/>
+  <object id="112" x="1200" y="880" width="80" height="80"/>
+  <object id="113" x="1680" y="800" width="80" height="80"/>
+  <object id="114" x="1440" y="480" width="80" height="80"/>
+  <object id="139" x="1120" y="560" width="80" height="80"/>
+  <object id="141" x="1280" y="560" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="22" name="Lightnings">
+  <object id="115" x="320" y="320" width="80" height="80"/>
+  <object id="116" x="400" y="320" width="80" height="80"/>
+  <object id="117" x="1120" y="80" width="80" height="80"/>
+  <object id="118" x="1280" y="80" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="23" name="Stars">
+  <object id="119" x="1120" y="400" width="80" height="80"/>
+  <object id="120" x="1200" y="400" width="80" height="80"/>
+  <object id="121" x="1280" y="400" width="80" height="80"/>
+  <object id="122" x="1200" y="320" width="80" height="80"/>
+  <object id="123" x="1200" y="480" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="24" name="Hearts">
+  <object id="124" x="1680" y="80" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="25" name="Door">
+  <object id="125" x="720" y="800" width="80" height="80"/>
+  <object id="126" x="720" y="880" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="26" name="GreenWall">
+  <object id="142" x="640" y="800" width="80" height="80"/>
+  <object id="143" x="640" y="880" width="80" height="80"/>
+  <object id="144" x="800" y="800" width="80" height="80"/>
+  <object id="146" x="800" y="880" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="27" name="Key">
+  <object id="129" x="560" y="80" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="28" name="Spikes">
+  <object id="130" x="720" y="640" width="320" height="80"/>
+  <object id="131" x="880" y="960" width="80" height="80"/>
+  <object id="132" x="80" y="960" width="560" height="80"/>
+  <object id="133" x="1520" y="880" width="80" height="80"/>
+ </objectgroup>
+ <objectgroup id="29" name="UpBricks">
+  <object id="134" x="640" y="240" width="80" height="80"/>
+  <object id="135" x="960" y="240" width="80" height="80"/>
+ </objectgroup>
+</map>

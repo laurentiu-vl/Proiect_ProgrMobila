@@ -1,0 +1,299 @@
+
+fileName.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+block-10
+  rotate: false
+  xy: 0, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block-12
+  rotate: false
+  xy: 0, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block-13
+  rotate: false
+  xy: 80, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block-3
+  rotate: false
+  xy: 0, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block-9
+  rotate: false
+  xy: 80, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block
+  rotate: false
+  xy: 160, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block
+  rotate: false
+  xy: 0, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 1
+block
+  rotate: false
+  xy: 80, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 11
+block
+  rotate: false
+  xy: 160, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 14
+block
+  rotate: false
+  xy: 240, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 15
+block
+  rotate: false
+  xy: 0, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 16
+block
+  rotate: false
+  xy: 80, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 17
+block
+  rotate: false
+  xy: 160, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 18
+block
+  rotate: false
+  xy: 240, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 19
+block
+  rotate: false
+  xy: 320, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 2
+block
+  rotate: false
+  xy: 0, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 20
+block
+  rotate: false
+  xy: 80, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 21
+block
+  rotate: false
+  xy: 160, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 22
+block
+  rotate: false
+  xy: 240, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 23
+block
+  rotate: false
+  xy: 320, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 24
+block
+  rotate: false
+  xy: 400, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 25
+block
+  rotate: false
+  xy: 80, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 26
+block
+  rotate: false
+  xy: 160, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 27
+block
+  rotate: false
+  xy: 240, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 28
+block
+  rotate: false
+  xy: 320, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 29
+block
+  rotate: false
+  xy: 400, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 30
+block
+  rotate: false
+  xy: 480, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 31
+block
+  rotate: false
+  xy: 160, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 32
+block
+  rotate: false
+  xy: 240, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 33
+block
+  rotate: false
+  xy: 320, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 34
+block
+  rotate: false
+  xy: 400, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 35
+block
+  rotate: false
+  xy: 480, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 36
+block
+  rotate: false
+  xy: 560, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 38
+block
+  rotate: false
+  xy: 240, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 39
+spider-web
+  rotate: false
+  xy: 240, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+block
+  rotate: false
+  xy: 320, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 4
+block
+  rotate: false
+  xy: 400, 160
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 5
+block
+  rotate: false
+  xy: 480, 240
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 6
+block
+  rotate: false
+  xy: 560, 320
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 7
+block
+  rotate: false
+  xy: 640, 400
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: 8
+potion
+  rotate: false
+  xy: 320, 0
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 400, 80
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
