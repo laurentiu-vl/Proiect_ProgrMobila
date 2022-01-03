@@ -34,8 +34,12 @@ import com.frankthefrog.game.Sprites.Player;
 import com.frankthefrog.game.Tools.B2WorldCreator;
 import com.frankthefrog.game.Tools.WorldContactListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class PlayScreen implements Screen {
-    public enum State { RUNNING, GAME_OVER}
+    public enum State { RUNNING, GAME_OVER, NEXT}
 
     private State currentState;
     private HUD hud;
@@ -50,8 +54,14 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private BitmapFont gameOverFont;
     private Batch gameBatch ;
-    private int currentLevel;
+    public static int currentLevel = 1;
     private final Frank game;
+    public static final List<Vector2> doors = Arrays.asList(
+            new Vector2(85.f, 565.f), // 1st level
+            new Vector2(2165.f, 805.f), // 2nd Level
+            new Vector2(3765.f, 805.f), // 3rd level
+            new Vector2(5365.f, 405.f)  // 4th level
+    );
 
     private Stage stage;
 
@@ -76,7 +86,7 @@ public class PlayScreen implements Screen {
         this.currentState = State.RUNNING;
 
         /* Map renderer */
-        map = new TmxMapLoader().load("Levels/scene" + currentLevel + ".tmx");
+        map = new TmxMapLoader().load("Levels/map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / Frank.PPM);
 
 
@@ -96,11 +106,6 @@ public class PlayScreen implements Screen {
         initFont();
     }
 
-    public void restart() {
-        game.nextLevel(++currentLevel);
-        this.dispose();
-    }
-
     private void initFont() {
         this.gameOverFont = new BitmapFont();
         this.gameOverFont.getData().setScale(3.f);
@@ -116,7 +121,7 @@ public class PlayScreen implements Screen {
         table.bottom();
         table.add(leftButton).colspan(1).expandX().padBottom(40).padLeft(10);
         table.add(rightButton).colspan(1).expandX().padBottom(40);
-        table.add(upButton).colspan(15).expandX().align(Align.right).padRight(10).padBottom(10);
+        table.add(upButton).colspan(15).expandX().align(Align.right).padRight(50).padBottom(10);
 
         stage = new Stage();
         stage.addActor(table);
@@ -155,6 +160,11 @@ public class PlayScreen implements Screen {
         });
     }
 
+    public void nextLevel() {
+        currentLevel++;
+        player.updateBody();
+    }
+
     private void initMusic() {
         Music music = Frank.manager.get("Sounds/background.mp3", Music.class);
         music.setLooping(true);
@@ -169,21 +179,6 @@ public class PlayScreen implements Screen {
         return map;
     }
 
-    public void nextLevel() {
-        this.dispose();
-        this.currentLevel++;
-        this.currentState = State.RUNNING;
-        map = new TmxMapLoader().load("Levels/scene" + currentLevel + ".tmx");
-        hud = new HUD(game.batch);
-        b2dr = new Box2DDebugRenderer();
-        b2dr.setDrawBodies(false);
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / Frank.PPM);
-        world = new World(new Vector2(0, -10.f), true);
-        world.setContactListener(new WorldContactListener());
-        creator = new B2WorldCreator(this);
-        player = new Player(this);
-    }
-
     public TextureAtlas getAtlas() {
         return this.atlas;
     }
@@ -191,21 +186,22 @@ public class PlayScreen implements Screen {
     public void handleInput() {
         if(Player.currentState != Player.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().y == 0) {
-                player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+                player.b2body.applyLinearImpulse(new Vector2(0, 4.5f), player.b2body.getWorldCenter(), true);
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().x <= 2) {
-                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+                player.b2body.applyLinearImpulse(new Vector2(0.3f, 0), player.b2body.getWorldCenter(), true);
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().x >= -2) {
-                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+                player.b2body.applyLinearImpulse(new Vector2(-0.3f, 0), player.b2body.getWorldCenter(), true);
             }
         }
     }
     public void update(float dt) {
         handleInput();
-        player.update(dt);
+        if(currentState != State.NEXT)
+            player.update(dt);
         if(Player.currentState == Player.State.DEAD) {
             this.currentState = State.GAME_OVER;
         }

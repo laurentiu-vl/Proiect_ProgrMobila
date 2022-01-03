@@ -3,9 +3,16 @@ frank.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Frank
+jump
   rotate: false
   xy: 0, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+moving
+  rotate: false
+  xy: 128, 48
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
