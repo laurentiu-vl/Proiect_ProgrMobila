@@ -30,6 +30,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Scenes.HUD;
+import com.frankthefrog.game.Sprites.Cage;
+import com.frankthefrog.game.Sprites.Lili;
 import com.frankthefrog.game.Sprites.Player;
 import com.frankthefrog.game.Tools.B2WorldCreator;
 import com.frankthefrog.game.Tools.WorldContactListener;
@@ -56,11 +58,14 @@ public class PlayScreen implements Screen {
     private Batch gameBatch ;
     public static int currentLevel = 1;
     private final Frank game;
+    private final Cage cage;
+    private final Lili lili;
     public static final List<Vector2> doors = Arrays.asList(
             new Vector2(85.f, 565.f), // 1st level
             new Vector2(2165.f, 805.f), // 2nd Level
             new Vector2(3765.f, 805.f), // 3rd level
-            new Vector2(5365.f, 405.f)  // 4th level
+            new Vector2(5365.f, 405.f),  // 4th level
+            new Vector2(7205.f, 85.f)
     );
 
     private Stage stage;
@@ -100,6 +105,8 @@ public class PlayScreen implements Screen {
 
         creator = new B2WorldCreator(this);
         player = new Player(this);
+        lili = new Lili(this);
+        cage = new Cage(this);
 
         initMusic();
         initButtons();
@@ -224,6 +231,8 @@ public class PlayScreen implements Screen {
                 gameBatch.setProjectionMatrix(gameCam.combined);
                 gameBatch.begin();
                 player.draw(gameBatch);
+                lili.draw(gameBatch);
+                cage.draw(gameBatch);
                 gameBatch.end();
 
                 gameBatch.setProjectionMatrix(hud.stage.getCamera().combined);

@@ -20,7 +20,7 @@ public abstract class InteractiveTileObject {
     public Body body;
     protected Fixture fixture;
     protected PlayScreen screen;
-    protected MapObject object;
+    public MapObject object;
 
     public InteractiveTileObject(PlayScreen screen, MapObject object, Body body, FixtureDef fdef) {
         this.screen = screen;

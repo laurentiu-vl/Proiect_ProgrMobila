@@ -33,7 +33,7 @@ public class HUD implements Disposable {
     public HUD(SpriteBatch sb) {
         worldTimer = score = 0;
         timeCount = 0;
-        energy = 100.f;
+        energy = 200.f;
         lives = 3;
 
         Viewport viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());

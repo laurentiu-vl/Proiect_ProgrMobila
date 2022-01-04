@@ -29,8 +29,6 @@ public class Player extends Sprite {
 
     //  private final Animation<TextureRegion> frankWalk;
       private final TextureRegion frankJump;
-    //  private final TextureRegion frankDead;
-
 
     private boolean runningRight;
     public static boolean isDead;
@@ -56,7 +54,7 @@ public class Player extends Sprite {
     public void defineFrank() {
         BodyDef bdef = new BodyDef();
         bdef.type = BodyDef.BodyType.DynamicBody;
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 5; i++) {
             bdef.position.set(doors.get(i).x / Frank.PPM, doors.get(i).y / Frank.PPM);
             this.b2bodies.add(world.createBody(bdef));
         }
@@ -73,7 +71,7 @@ public class Player extends Sprite {
                                 Frank.WALL_BIT |
                                 Frank.DOOR_BIT;
         fdef.shape = shape;
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 5; i++)
             b2bodies.get(i).createFixture(fdef).setUserData(this);
 
         fdef.filter.categoryBits = Frank.POWER_UP_BIT;
@@ -83,7 +81,7 @@ public class Player extends Sprite {
                                Frank.LIGHTNING_BIT |
                                Frank.HEART_BIT;
         fdef.isSensor = true;
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 5; i++)
             b2bodies.get(i).createFixture(fdef).setUserData(this);
         b2body = b2bodies.get(0);
     }

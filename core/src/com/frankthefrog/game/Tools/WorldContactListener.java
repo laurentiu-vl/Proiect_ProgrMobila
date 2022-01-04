@@ -82,15 +82,17 @@ public class WorldContactListener implements ContactListener {
                     tramp = (Trampoline) (fixA.getUserData());
                 else
                     tramp = (Trampoline) (fixB.getUserData());
-              //  Gdx.app.log("Player position", String.valueOf(player.b2body.getPosition().y));
-              //  Gdx.app.log("Trampoline position", String.valueOf(tramp.body.getPosition().y));
-                float playerPos  = player.b2body.getPosition().x ; //+ 72.f / Frank.PPM;
+
+                float playerPos  = player.b2body.getPosition().x ;
                 float trampPos = tramp.body.getPosition().x;
-                Gdx.app.log("Velocity", String.valueOf(player.b2body.getLinearVelocity().y));
+
                 if(player.b2body.getPosition().y >= tramp.body.getPosition().y + 50.f / Frank.PPM ||
-                        (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 72.F / Frank.PPM >=  trampPos )) {
+                        (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 72.f / Frank.PPM >=  trampPos )) {
                     player.b2body.setLinearVelocity(player.b2body.getLinearVelocity().x, 0.f);
-                    player.b2body.applyLinearImpulse(new Vector2(0f,9.f), player.b2body.getWorldCenter(), true);
+                    if(tramp.object.getProperties().containsKey("half"))
+                        player.b2body.applyLinearImpulse(new Vector2(0f,6.5f), player.b2body.getWorldCenter(), true);
+                    else
+                        player.b2body.applyLinearImpulse(new Vector2(0f,8.5f), player.b2body.getWorldCenter(), true);
                 }
                 break;
             case Frank.POWER_UP_BIT | Frank.KEY_BIT:
