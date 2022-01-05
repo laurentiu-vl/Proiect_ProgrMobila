@@ -5,29 +5,29 @@ filter: Nearest,Nearest
 repeat: none
 cage
   rotate: false
-  xy: 1, 83
+  xy: 1, 63
   size: 160, 160
   orig: 160, 160
   offset: 0, 0
   index: -1
+lili
+  rotate: false
+  xy: 163, 123
+  size: 50, 100
+  orig: 50, 100
+  offset: 0, 0
+  index: -1
 jump
   rotate: false
-  xy: 163, 115
-  size: 128, 128
-  orig: 128, 128
+  xy: 1, 1
+  size: 60, 60
+  orig: 60, 60
   offset: 0, 0
   index: -1
 moving
   rotate: false
-  xy: 1, 1
-  size: 80, 80
-  orig: 80, 80
-  offset: 0, 0
-  index: -1
-lili
-  rotate: false
-  xy: 293, 143
-  size: 50, 100
-  orig: 50, 100
+  xy: 63, 1
+  size: 60, 60
+  orig: 60, 60
   offset: 0, 0
   index: -1

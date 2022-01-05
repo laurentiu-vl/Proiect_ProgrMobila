@@ -1,6 +1,5 @@
 package com.frankthefrog.game.Tools;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -10,14 +9,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Screens.PlayScreen;
 import com.frankthefrog.game.Sprites.Coin;
 import com.frankthefrog.game.Sprites.Door;
 import com.frankthefrog.game.Sprites.Heart;
-import com.frankthefrog.game.Sprites.InteractiveTileObject;
 import com.frankthefrog.game.Sprites.Key;
 import com.frankthefrog.game.Sprites.Lightning;
 import com.frankthefrog.game.Sprites.Spike;
@@ -32,7 +29,7 @@ public class B2WorldCreator {
     public static List<Wall> walls = new ArrayList<>();
     public B2WorldCreator(PlayScreen screen) {
         World world = screen.getWorld();
-        TiledMap map = screen.getMap();
+        TiledMap map = screen.map;
 
         BodyDef bdef = new BodyDef();
         PolygonShape p_shape = new PolygonShape();

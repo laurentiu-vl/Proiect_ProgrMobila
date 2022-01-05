@@ -25,6 +25,7 @@ public class Frank extends Game {
 	public static final short KEY_BIT = 512;
 	public static final short DOOR_BIT = 1024;
 	public static final short POWER_UP_BIT = 2048;
+	public static final short HEAD_BIT = 4096;
 
 	public static AssetManager manager;
 

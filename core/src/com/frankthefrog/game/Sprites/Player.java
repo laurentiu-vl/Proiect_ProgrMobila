@@ -1,14 +1,16 @@
 package com.frankthefrog.game.Sprites;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Disposable;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Scenes.HUD;
 import com.frankthefrog.game.Screens.PlayScreen;
@@ -25,11 +27,10 @@ public class Player extends Sprite {
     public World world;
     public List<Body> b2bodies = new ArrayList<>();
     public Body b2body ;
+    private final PlayScreen screen;
     private final TextureRegion frankIdle;
-
-    //  private final Animation<TextureRegion> frankWalk;
-      private final TextureRegion frankJump;
-
+    public boolean isHeadTouched = false;
+    private final TextureRegion frankJump;
     private boolean runningRight;
     public static boolean isDead;
     private float stateTimer;
@@ -42,12 +43,13 @@ public class Player extends Sprite {
         previousState = State.STANDING;
         stateTimer = 0.f;
         runningRight = true;
+        this.screen = screen;
 
         // Add Textures
-        frankIdle = new TextureRegion(screen.getAtlas().findRegion("moving"), 0, 0, 80, 80);
-        frankJump = new TextureRegion(screen.getAtlas().findRegion("jump"), 0, 0, 80, 80);
+        frankIdle = new TextureRegion(screen.getAtlas().findRegion("moving"), 0, 0, 60, 60);
+        frankJump = new TextureRegion(screen.getAtlas().findRegion("jump"), 0, 0, 60, 60);
         defineFrank();
-        setBounds(0, 0, 80/ Frank.PPM, 80 / Frank.PPM);
+        setBounds(0, 0, 60/ Frank.PPM, 60 / Frank.PPM);
         setRegion(frankIdle);
     }
 
@@ -63,7 +65,7 @@ public class Player extends Sprite {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(36 / Frank.PPM);
+        shape.setRadius(28 / Frank.PPM);
         fdef.filter.categoryBits = Frank.PLAYER_BIT;
         fdef.filter.maskBits =  Frank.GROUND_BIT |
                                 Frank.SPIKE_BIT |
@@ -83,6 +85,16 @@ public class Player extends Sprite {
         fdef.isSensor = true;
         for(int i = 0; i < 5; i++)
             b2bodies.get(i).createFixture(fdef).setUserData(this);
+
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-28.f / Frank.PPM, 29.f / Frank.PPM), new Vector2(28.f / Frank.PPM, 29.f / Frank.PPM));
+        fdef.filter.categoryBits = Frank.HEAD_BIT;
+        fdef.filter.maskBits = Frank.GROUND_BIT;
+        fdef.shape = head;
+       // fdef.isSensor = true;
+        for(int i =0; i < 5; i++) {
+            b2bodies.get(i).createFixture(fdef).setUserData(this);
+        }
         b2body = b2bodies.get(0);
     }
 
@@ -95,9 +107,6 @@ public class Player extends Sprite {
 
         TextureRegion region;
         switch(currentState) {
-            case DEAD:
-                region = frankIdle;
-                break;
             case JUMPING:
                 HUD.addEnergy(-1.5f * dt);
                 region = frankJump;
@@ -107,6 +116,7 @@ public class Player extends Sprite {
                 region = frankIdle;// frankWalk.getKeyFrame(stateTimer, true);
                 break;
             case STANDING:
+            case DEAD:
             default:
                 region = frankIdle;
                 break;
@@ -126,6 +136,9 @@ public class Player extends Sprite {
     }
 
     public void update(float dt) {
+        if(getBoundingRectangle().overlaps(screen.getCage())) {
+            screen.currentState = PlayScreen.State.EPILOG;
+        }
         setPosition(b2body.getPosition().x - getWidth()/2.f, b2body.getPosition().y - getWidth() / 2.f );
         setRegion(getFrame(dt));
     }
@@ -134,9 +147,9 @@ public class Player extends Sprite {
     public State getState() {
         if(isDead) {
             return State.DEAD;
-        } else if(b2body.getLinearVelocity().y != 0) {
+        } else if(b2body.getLinearVelocity().y != 0 || isHeadTouched) {
             return State.JUMPING;
-        }  else if(b2body.getLinearVelocity().x != 0 && b2body.getLinearVelocity().y == 0) {
+        }  else if(b2body.getLinearVelocity().x != 0 && b2body.getLinearVelocity().y == 0 && !isHeadTouched) {
             return State.RUNNING;
         } else {
             return State.STANDING;

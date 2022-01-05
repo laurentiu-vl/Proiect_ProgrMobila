@@ -114,4 +114,9 @@ public class HUD implements Disposable {
         lives--;
         livesLabel.setText(String.format("%02d", Math.round(lives)));
     }
+
+    public void setWorldTimer(int worldTimer) {
+        this.worldTimer = worldTimer;
+    }
+
 }

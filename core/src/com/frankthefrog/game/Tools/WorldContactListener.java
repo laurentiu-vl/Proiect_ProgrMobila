@@ -25,10 +25,11 @@ public class WorldContactListener implements ContactListener {
         Fixture fixB = contact.getFixtureB();
 
         Player player;
-        if(fixA.getFilterData().categoryBits == Frank.PLAYER_BIT || fixA.getFilterData().categoryBits == Frank.POWER_UP_BIT)
+        if(fixA.getFilterData().categoryBits == Frank.PLAYER_BIT || fixA.getFilterData().categoryBits == Frank.POWER_UP_BIT || fixA.getFilterData().categoryBits == Frank.HEAD_BIT)
             player = (Player)(fixA.getUserData());
         else
             player = (Player)(fixB.getUserData());
+
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         switch(cDef) {
@@ -87,7 +88,7 @@ public class WorldContactListener implements ContactListener {
                 float trampPos = tramp.body.getPosition().x;
 
                 if(player.b2body.getPosition().y >= tramp.body.getPosition().y + 50.f / Frank.PPM ||
-                        (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 72.f / Frank.PPM >=  trampPos )) {
+                        (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 56.f / Frank.PPM >=  trampPos )) {
                     player.b2body.setLinearVelocity(player.b2body.getLinearVelocity().x, 0.f);
                     if(tramp.object.getProperties().containsKey("half"))
                         player.b2body.applyLinearImpulse(new Vector2(0f,6.5f), player.b2body.getWorldCenter(), true);
@@ -102,6 +103,10 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Key) fixB.getUserData()).onHit();
                 break;
+            case Frank.HEAD_BIT | Frank.GROUND_BIT:
+                Gdx.app.log("Contact", "Touched with head");
+                player.isHeadTouched = true;
+                break;
             default:
                 break;
         }
@@ -109,7 +114,19 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
 
+        int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+
+        if(cDef == (Frank.HEAD_BIT | Frank.GROUND_BIT)) {
+            Player player;
+            if (fixA.getFilterData().categoryBits == Frank.HEAD_BIT)
+                player = (Player) (fixA.getUserData());
+            else
+                player = (Player) (fixB.getUserData());
+            player.isHeadTouched = false;
+        }
     }
 
     @Override
