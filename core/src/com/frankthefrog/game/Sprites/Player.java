@@ -137,7 +137,7 @@ public class Player extends Sprite {
 
     public void update(float dt) {
         if(getBoundingRectangle().overlaps(screen.getCage())) {
-            screen.currentState = PlayScreen.State.EPILOG;
+            screen.currentState = PlayScreen.State.EPILOGUE;
         }
         setPosition(b2body.getPosition().x - getWidth()/2.f, b2body.getPosition().y - getWidth() / 2.f );
         setRegion(getFrame(dt));

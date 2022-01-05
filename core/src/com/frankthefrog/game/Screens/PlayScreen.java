@@ -36,18 +36,16 @@ import com.frankthefrog.game.Sprites.Player;
 import com.frankthefrog.game.Tools.B2WorldCreator;
 import com.frankthefrog.game.Tools.WorldContactListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PlayScreen implements Screen {
-    public enum State { RUNNING, GAME_OVER, PROLOG, EPILOG}
+    public enum State { RUNNING, GAME_OVER, PROLOG, EPILOGUE}
 
     public State currentState;
     private final HUD hud;
     private final Player player;
     private final Box2DDebugRenderer b2dr;
-    private final B2WorldCreator creator;
     private final OrthographicCamera gameCam;
     private final Viewport gamePort;
     private final TextureAtlas atlas;
@@ -55,8 +53,8 @@ public class PlayScreen implements Screen {
     public final TiledMap map;
     private float timeCount;
     private final OrthogonalTiledMapRenderer renderer;
-    private BitmapFont gameOverFont, prologFont, epilogFont;
-    private List<String> epilog, prolog;
+    private BitmapFont gameOverFont, introFont, endFont;
+    private List<String> introText, endText;
     private final Batch gameBatch ;
     public static int currentLevel = 1;
     private final Cage cage;
@@ -69,7 +67,8 @@ public class PlayScreen implements Screen {
             new Vector2(7205.f, 85.f) // 5th level
     );
 
-    private Stage stage;
+    private Stage interactStage, skipStage, replayStage;
+
 
     public PlayScreen(Frank game, int currentLevel) {
         /* Sprites atlas */
@@ -90,8 +89,8 @@ public class PlayScreen implements Screen {
         hud = new HUD(game.batch);
 
         /* Current State */
-        //this.currentState = State.PROLOG;
-        this.currentState = State.RUNNING;
+        this.currentState = State.PROLOG;
+        //this.currentState = State.RUNNING;
 
         /* Map renderer */
         map = new TmxMapLoader().load("Levels/map.tmx");
@@ -105,31 +104,33 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
         b2dr.setDrawBodies(false);
 
-        creator = new B2WorldCreator(this);
+        new B2WorldCreator(this);
         lili = new Lili(this);
         cage = new Cage(this);
         player = new Player(this);
 
         initMusic();
-        initButtons();
+        initInteractButtons();
+        initReplayButton();
+        initSkipButton();
         initFont();
-        initEpilog();
-        initProlog();
+        initIntro();
+        initEnding();
     }
 
     private void initFont() {
         this.gameOverFont = new BitmapFont();
         this.gameOverFont.getData().setScale(5.f);
 
-        this.epilogFont = new BitmapFont();
-        this.epilogFont.getData().setScale(3.f);
+        this.introFont = new BitmapFont();
+        this.introFont.getData().setScale(3.f);
 
-        this.prologFont = new BitmapFont();
-        this.prologFont.getData().setScale(3.f);
+        this.endFont = new BitmapFont();
+        this.endFont.getData().setScale(3.f);
     }
 
-    private void initEpilog() {
-        this.epilog = Arrays.asList(
+    private void initIntro() {
+        this.introText = Arrays.asList(
                 "INTRO",
                 "It was a beautiful, sunny day",
                 "Frank the frog and Lili the lizard were walking down the road",
@@ -139,18 +140,18 @@ public class PlayScreen implements Screen {
         );
     }
 
-    private void initProlog() {
-        this.prolog = Arrays.asList(
-                "EPILOGUE",
+    private void initEnding() {
+        this.endText = Arrays.asList(
+                "END",
                 "Frank was very happy to meet Lili and to set her free",
                 "She told him, she was kidnapped by an unknown person and locked up in a cage",
                 "The kidnapper told her that he would free her for a certain sum of money",
                 "Soon after they found a way out of the sewer and continued their walk",
-                "THANKS FOR PLAYING"
+                "THANKS FOR PLAYING!"
         );
     }
 
-    private void initButtons() {
+    private void initInteractButtons() {
         ImageButton leftButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-left.png"))));
         ImageButton rightButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-right.png"))));
         ImageButton upButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-up.png"))));
@@ -158,13 +159,13 @@ public class PlayScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.bottom();
-        table.add(leftButton).colspan(1).expandX().padBottom(40).padLeft(10);
+        table.add(leftButton).colspan(1).expandX().padBottom(40).padLeft(50);
         table.add(rightButton).colspan(1).expandX().padBottom(40);
-        table.add(upButton).colspan(15).expandX().align(Align.right).padRight(50).padBottom(10);
+        table.add(upButton).colspan(15).expandX().align(Align.right).padRight(100).padBottom(10);
 
-        stage = new Stage();
-        stage.addActor(table);
-        Gdx.input.setInputProcessor(stage);
+        interactStage = new Stage();
+        interactStage.addActor(table);
+
         leftButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -195,6 +196,41 @@ public class PlayScreen implements Screen {
                     return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void initReplayButton() {
+        ImageButton button =  new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/replay.png"))));
+        Table table = new Table();
+        table.setFillParent(true);
+        table.bottom().padBottom(40).add(button).align(Align.center);
+        replayStage = new Stage();
+        replayStage.addActor(table);
+        button.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                // Restart game
+                return true;
+            }
+        });
+    }
+
+    private void initSkipButton() {
+        ImageButton button =  new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/skip.png"))));
+        Table table = new Table();
+        table.setFillParent(true);
+        table.bottom().padBottom(40).add(button).align(Align.right).padRight(50);
+        skipStage = new Stage();
+        skipStage.addActor(table);
+        Gdx.input.setInputProcessor(skipStage);
+        button.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                resetTimeCount();
+                currentState = State.RUNNING;
+                Gdx.input.setInputProcessor(interactStage);
+                return true;
             }
         });
     }
@@ -259,8 +295,12 @@ public class PlayScreen implements Screen {
                 renderer.setView(gameCam);
                 break;
             case PROLOG:
-            case EPILOG:
                 timeCount += dt;
+                Gdx.input.setInputProcessor(skipStage);
+                break;
+            case EPILOGUE:
+                timeCount += dt;
+                Gdx.input.setInputProcessor(replayStage);
                 break;
             default:
                 break;
@@ -286,8 +326,8 @@ public class PlayScreen implements Screen {
                 gameBatch.setProjectionMatrix(hud.stage.getCamera().combined);
                 hud.stage.draw();
 
-                stage.act(Gdx.graphics.getDeltaTime());
-                stage.draw();
+                interactStage.act(Gdx.graphics.getDeltaTime());
+                interactStage.draw();
                 break;
             case GAME_OVER:
                 gameBatch.begin();
@@ -304,31 +344,31 @@ public class PlayScreen implements Screen {
                 float deviceWidth = Gdx.graphics.getWidth();
                 float deviceHeight= Gdx.graphics.getHeight();
 
-                layout.setText(gameOverFont, epilog.get(0)); // INTRO
-                this.gameOverFont.draw(gameBatch, epilog.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 15.f);
+                layout.setText(gameOverFont, introText.get(0)); // INTRO
+                this.gameOverFont.draw(gameBatch, introText.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 15.f);
                 if(timeCount >= 2) {
-                    layout.setText(epilogFont, epilog.get(1));
-                    this.epilogFont.draw(gameBatch, epilog.get(1), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 + 2 * 100);
+                    layout.setText(introFont, introText.get(1));
+                    this.introFont.draw(gameBatch, introText.get(1), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 + 2 * 102);
                 }
 
                 if(timeCount >= 7) {
-                    layout.setText(epilogFont, epilog.get(2));
-                    this.epilogFont.draw(gameBatch, epilog.get(2), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 +  100);
+                    layout.setText(introFont, introText.get(2));
+                    this.introFont.draw(gameBatch, introText.get(2), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 +  100);
                 }
 
                 if(timeCount >= 12) {
-                    layout.setText(epilogFont, epilog.get(3));
-                    this.epilogFont.draw(gameBatch, epilog.get(3), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 );
+                    layout.setText(introFont, introText.get(3));
+                    this.introFont.draw(gameBatch, introText.get(3), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 );
                 }
 
                 if(timeCount >= 17) {
-                    layout.setText(epilogFont, epilog.get(4));
-                    this.epilogFont.draw(gameBatch, epilog.get(4), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 100);
+                    layout.setText(introFont, introText.get(4));
+                    this.introFont.draw(gameBatch, introText.get(4), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 100);
                 }
 
                 if(timeCount >= 22) {
-                    layout.setText(epilogFont, epilog.get(5));
-                    this.epilogFont.draw(gameBatch, epilog.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 100);
+                    layout.setText(introFont, introText.get(5));
+                    this.introFont.draw(gameBatch, introText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 100);
                 }
 
                 if(timeCount >= 27) {
@@ -336,40 +376,46 @@ public class PlayScreen implements Screen {
                     resetTimeCount();
                 }
                 gameBatch.end();
+
+                skipStage.act(Gdx.graphics.getDeltaTime());
+                skipStage.draw();
                 break;
-            case EPILOG:
+            case EPILOGUE:
                 gameBatch.begin();
                 layout = new GlyphLayout();
                 deviceWidth = Gdx.graphics.getWidth();
                 deviceHeight= Gdx.graphics.getHeight();
 
-                layout.setText(gameOverFont, prolog.get(0)); // INTRO
-                this.gameOverFont.draw(gameBatch, prolog.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 15.f);
+                layout.setText(gameOverFont, endText.get(0)); // INTRO
+                this.gameOverFont.draw(gameBatch, endText.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 15.f);
                 if(timeCount >= 2) {
-                    layout.setText(epilogFont, prolog.get(1));
-                    this.epilogFont.draw(gameBatch, prolog.get(1), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 + 2 * 100);
+                    layout.setText(endFont, endText.get(1));
+                    this.endFont.draw(gameBatch, endText.get(1), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 + 2 * 100);
                 }
 
                 if(timeCount >= 7) {
-                    layout.setText(epilogFont, prolog.get(2));
-                    this.epilogFont.draw(gameBatch, prolog.get(2), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 +  100);
+                    layout.setText(endFont, endText.get(2));
+                    this.endFont.draw(gameBatch, endText.get(2), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 +  100);
                 }
 
                 if(timeCount >= 12) {
-                    layout.setText(epilogFont, prolog.get(3));
-                    this.epilogFont.draw(gameBatch, prolog.get(3), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 );
+                    layout.setText(endFont, endText.get(3));
+                    this.endFont.draw(gameBatch, endText.get(3), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 );
                 }
 
                 if(timeCount >= 17) {
-                    layout.setText(epilogFont, prolog.get(4));
-                    this.epilogFont.draw(gameBatch, prolog.get(4), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 100);
+                    layout.setText(endFont, endText.get(4));
+                    this.endFont.draw(gameBatch, endText.get(4), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 100);
                 }
 
                 if(timeCount >= 22) {
-                    layout.setText(epilogFont, prolog.get(5));
-                    this.epilogFont.draw(gameBatch, prolog.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 100);
+                    layout.setText(gameOverFont, endText.get(5));
+                    this.gameOverFont.draw(gameBatch, endText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 150);
                 }
                 gameBatch.end();
+
+                replayStage.act(Gdx.graphics.getDeltaTime());
+                replayStage.draw();
                 break;
             default:
                 break;
