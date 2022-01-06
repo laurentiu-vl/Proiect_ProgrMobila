@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -85,8 +86,14 @@ public class HUD implements Disposable {
             timeCount = 0;
         }
 
-        if(lives <= 0 || energy <= 0.f) { // Game Over
-           Player.isDead = true;
+        if(lives <= 0) {  // Game Over
+            Player.deathCause = "Out of lives";
+            Player.isDead = true;
+        }
+
+        if(energy <= 0.f) {
+            Player.deathCause = "Out of energy";
+            Player.isDead = true;
         }
     }
 
@@ -119,4 +126,22 @@ public class HUD implements Disposable {
         this.worldTimer = worldTimer;
     }
 
+
+    @SuppressWarnings("DefaultLocale")
+    public void reset() {
+        worldTimer = 0;
+        timeLabel.setText(String.format("%04d", worldTimer));
+
+        score = 100;
+        scoreLabel.setText(String.format("%04d", score));
+
+        energy = 150.f;
+        energyLabel.setText(String.format("%04d", Math.round(energy)));
+
+        lives = 3;
+        livesLabel.setText(String.format("%02d", Math.round(lives)));
+
+        Player.isDead = false;
+        Player.isJumping = false;
+    }
 }

@@ -17,7 +17,7 @@ public class Spike extends InteractiveTileObject{
 
     @Override
     public void onHit() {
-        Frank.manager.get("Sounds/power-up.mp3", Sound.class).play();
+        Frank.manager.get("Sounds/spikes.mp3", Sound.class).play();
         HUD.removeLife();
     }
 }

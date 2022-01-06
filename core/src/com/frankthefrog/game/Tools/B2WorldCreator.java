@@ -27,6 +27,7 @@ import java.util.List;
 
 public class B2WorldCreator {
     public static List<Wall> walls = new ArrayList<>();
+
     public B2WorldCreator(PlayScreen screen) {
         World world = screen.getWorld();
         TiledMap map = screen.map;
@@ -144,6 +145,7 @@ public class B2WorldCreator {
             new Door(screen, object, body, fdef);
         }
 
+        walls.clear();
         /* Add Walls */
         for(MapObject object: map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();

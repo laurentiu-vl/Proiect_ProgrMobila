@@ -18,7 +18,7 @@ public class Key extends InteractiveTileObject {
 
     @Override
     public void onHit() {
-        Frank.manager.get("Sounds/power-up.mp3", Sound.class).play();
+        Frank.manager.get("Sounds/power-up.wav", Sound.class).play();
         setCategoryFilter(Frank.NOTHING_BIT);
         removeTile();
 

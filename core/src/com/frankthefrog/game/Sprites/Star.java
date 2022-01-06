@@ -17,7 +17,7 @@ public class Star extends InteractiveTileObject{
 
     @Override
     public void onHit() {
-        Frank.manager.get("Sounds/power-up.mp3", Sound.class).play();
+        Frank.manager.get("Sounds/star.wav", Sound.class).play();
         HUD.addScore(100);
         setCategoryFilter(Frank.NOTHING_BIT);
         removeTile();

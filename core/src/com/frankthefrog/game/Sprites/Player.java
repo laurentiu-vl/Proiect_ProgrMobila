@@ -1,9 +1,10 @@
 package com.frankthefrog.game.Sprites;
 
-import com.badlogic.gdx.Screen;
+import static com.frankthefrog.game.Screens.PlayScreen.currentLevel;
+import static com.frankthefrog.game.Screens.PlayScreen.doors;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -14,9 +15,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Scenes.HUD;
 import com.frankthefrog.game.Screens.PlayScreen;
-
-import static com.frankthefrog.game.Screens.PlayScreen.currentLevel;
-import static com.frankthefrog.game.Screens.PlayScreen.doors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +27,11 @@ public class Player extends Sprite {
     public Body b2body ;
     private final PlayScreen screen;
     private final TextureRegion frankIdle;
-    public boolean isHeadTouched = false;
     private final TextureRegion frankJump;
     private boolean runningRight;
-    public static boolean isDead;
+    public static boolean isDead, isJumping;
     private float stateTimer;
+    public static String deathCause;
 
     public Player(PlayScreen screen) {
 
@@ -44,6 +42,7 @@ public class Player extends Sprite {
         stateTimer = 0.f;
         runningRight = true;
         this.screen = screen;
+        isJumping = true;
 
         // Add Textures
         frankIdle = new TextureRegion(screen.getAtlas().findRegion("moving"), 0, 0, 60, 60);
@@ -69,8 +68,8 @@ public class Player extends Sprite {
         fdef.filter.categoryBits = Frank.PLAYER_BIT;
         fdef.filter.maskBits =  Frank.GROUND_BIT |
                                 Frank.SPIKE_BIT |
-                                Frank.TRAMPOLINE_BIT |
                                 Frank.WALL_BIT |
+                                Frank.TRAMPOLINE_BIT |
                                 Frank.DOOR_BIT;
         fdef.shape = shape;
         for(int i = 0; i < 5; i++)
@@ -86,12 +85,12 @@ public class Player extends Sprite {
         for(int i = 0; i < 5; i++)
             b2bodies.get(i).createFixture(fdef).setUserData(this);
 
-        EdgeShape head = new EdgeShape();
-        head.set(new Vector2(-28.f / Frank.PPM, 29.f / Frank.PPM), new Vector2(28.f / Frank.PPM, 29.f / Frank.PPM));
+        EdgeShape bottom = new EdgeShape();
+        bottom.set(new Vector2(-20.f / Frank.PPM, -28.f / Frank.PPM), new Vector2(20.f / Frank.PPM, -28.f / Frank.PPM));
         fdef.filter.categoryBits = Frank.HEAD_BIT;
-        fdef.filter.maskBits = Frank.GROUND_BIT;
-        fdef.shape = head;
-       // fdef.isSensor = true;
+        fdef.filter.maskBits = Frank.GROUND_BIT | Frank.TRAMPOLINE_BIT ;
+        fdef.shape = bottom;
+        fdef.isSensor = true;
         for(int i =0; i < 5; i++) {
             b2bodies.get(i).createFixture(fdef).setUserData(this);
         }
@@ -138,6 +137,9 @@ public class Player extends Sprite {
     public void update(float dt) {
         if(getBoundingRectangle().overlaps(screen.getCage())) {
             screen.currentState = PlayScreen.State.EPILOGUE;
+            PlayScreen.finalLevelMusic.stop();
+            PlayScreen.finalLevelMusic.setPosition(0.f);
+            PlayScreen.outroMusic.play();
         }
         setPosition(b2body.getPosition().x - getWidth()/2.f, b2body.getPosition().y - getWidth() / 2.f );
         setRegion(getFrame(dt));
@@ -147,9 +149,9 @@ public class Player extends Sprite {
     public State getState() {
         if(isDead) {
             return State.DEAD;
-        } else if(b2body.getLinearVelocity().y != 0 || isHeadTouched) {
+        } else if(b2body.getLinearVelocity().y != 0 || isJumping) {
             return State.JUMPING;
-        }  else if(b2body.getLinearVelocity().x != 0 && b2body.getLinearVelocity().y == 0 && !isHeadTouched) {
+        }  else if(b2body.getLinearVelocity().x != 0 && b2body.getLinearVelocity().y == 0 && !isJumping) {
             return State.RUNNING;
         } else {
             return State.STANDING;

@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.frankthefrog.game.Frank;
+import com.frankthefrog.game.Screens.PlayScreen;
 import com.frankthefrog.game.Sprites.Coin;
 import com.frankthefrog.game.Sprites.Door;
 import com.frankthefrog.game.Sprites.Heart;
@@ -35,6 +36,7 @@ public class WorldContactListener implements ContactListener {
         switch(cDef) {
             case Frank.PLAYER_BIT | Frank.DOOR_BIT:
                 Gdx.app.log("Contact", "Touched door");
+
                 if(fixA.getFilterData().categoryBits == Frank.DOOR_BIT)
                     ((Door) fixA.getUserData()).onHit();
                 else
@@ -76,7 +78,7 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Coin) fixB.getUserData()).onHit();
                 break;
-            case Frank.PLAYER_BIT | Frank.TRAMPOLINE_BIT:
+            case Frank.HEAD_BIT | Frank.TRAMPOLINE_BIT:
                 Gdx.app.log("Contact", "Touched trampolines");
                 Trampoline tramp;
                 if(fixA.getFilterData().categoryBits == Frank.TRAMPOLINE_BIT)
@@ -84,17 +86,18 @@ public class WorldContactListener implements ContactListener {
                 else
                     tramp = (Trampoline) (fixB.getUserData());
 
-                float playerPos  = player.b2body.getPosition().x ;
-                float trampPos = tramp.body.getPosition().x;
+              //  float playerPos  = player.b2body.getPosition().x ;
+               // float trampPos = tramp.body.getPosition().x;
 
-                if(player.b2body.getPosition().y >= tramp.body.getPosition().y + 50.f / Frank.PPM ||
-                        (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 56.f / Frank.PPM >=  trampPos )) {
+               // if(player.b2body.getPosition().y >= tramp.body.getPosition().y + 50.f / Frank.PPM ||
+               //         (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 56.f / Frank.PPM >=  trampPos )) {
                     player.b2body.setLinearVelocity(player.b2body.getLinearVelocity().x, 0.f);
+                    Player.isJumping = true;
+                    tramp.onHit();
                     if(tramp.object.getProperties().containsKey("half"))
                         player.b2body.applyLinearImpulse(new Vector2(0f,6.5f), player.b2body.getWorldCenter(), true);
                     else
                         player.b2body.applyLinearImpulse(new Vector2(0f,8.5f), player.b2body.getWorldCenter(), true);
-                }
                 break;
             case Frank.POWER_UP_BIT | Frank.KEY_BIT:
                 Gdx.app.log("Contact", "Touched key");
@@ -105,7 +108,7 @@ public class WorldContactListener implements ContactListener {
                 break;
             case Frank.HEAD_BIT | Frank.GROUND_BIT:
                 Gdx.app.log("Contact", "Touched with head");
-                player.isHeadTouched = true;
+                Player.isJumping = false;
                 break;
             default:
                 break;
@@ -114,19 +117,7 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        Fixture fixA = contact.getFixtureA();
-        Fixture fixB = contact.getFixtureB();
 
-        int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
-
-        if(cDef == (Frank.HEAD_BIT | Frank.GROUND_BIT)) {
-            Player player;
-            if (fixA.getFilterData().categoryBits == Frank.HEAD_BIT)
-                player = (Player) (fixA.getUserData());
-            else
-                player = (Player) (fixB.getUserData());
-            player.isHeadTouched = false;
-        }
     }
 
     @Override

@@ -17,7 +17,7 @@ public class Coin extends InteractiveTileObject{
 
     @Override
     public void onHit() {
-        Frank.manager.get("Sounds/power-up.mp3", Sound.class).play();
+        Frank.manager.get("Sounds/coins.wav", Sound.class).play();
         if(object.getProperties().containsKey("bronze")) {
             HUD.addScore(10);
         } else if(object.getProperties().containsKey("silver")){

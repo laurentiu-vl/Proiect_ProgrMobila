@@ -1,5 +1,6 @@
 package com.frankthefrog.game.Sprites;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -15,7 +16,6 @@ public class Trampoline extends InteractiveTileObject{
 
     @Override
     public void onHit() {
-        //Frank.manager.get("Sounds/power-up.mp3", Sound.class).play();
-
+        Frank.manager.get("Sounds/jump.wav", Sound.class).play();
     }
 }

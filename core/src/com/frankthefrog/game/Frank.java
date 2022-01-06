@@ -36,21 +36,24 @@ public class Frank extends Game {
 		manager = new AssetManager();
 		// Load music and sounds
 		manager.load("Sounds/background.mp3", Music.class);
+		manager.load("Sounds/coins.wav", Sound.class);
 		manager.load("Sounds/dead.mp3", Sound.class);
-		manager.load("Sounds/final.mp3", Sound.class);
-		manager.load("Sounds/final-level.mp3", Sound.class);
-		manager.load("Sounds/jump.mp3", Sound.class);
-		manager.load("Sounds/power-up.mp3", Sound.class);
-		manager.load("Sounds/press-button.mp3", Sound.class);
+		manager.load("Sounds/final.mp3", Music.class);
+		manager.load("Sounds/final-level.mp3", Music.class);
+		manager.load("Sounds/jump.wav", Sound.class);
+		manager.load("Sounds/power-up.wav", Sound.class);
+		manager.load("Sounds/press-button.wav", Sound.class);
 		manager.load("Sounds/spikes.mp3", Sound.class);
+		manager.load("Sounds/star.wav", Sound.class);
+		manager.load("Sounds/intro.mp3", Music.class);
 		manager.finishLoading();
-
-		setScreen(new PlayScreen(this, 1));
+		setScreen(new PlayScreen(this));
 	}
 
-	public void nextLevel(int level) {
-		setScreen(new PlayScreen(this, level));
+	public void reset() {
+		setScreen(new PlayScreen(this));
 	}
+
 
 	@Override
 	public void render () {

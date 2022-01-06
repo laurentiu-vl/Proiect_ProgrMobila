@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,7 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Scenes.HUD;
@@ -67,10 +68,12 @@ public class PlayScreen implements Screen {
             new Vector2(7205.f, 85.f) // 5th level
     );
 
-    private Stage interactStage, skipStage, replayStage;
+    private Stage interactStage, skipStage, replayStage, gameOverStage;
+    public static Music introMusic, backgroundMusic,finalLevelMusic, outroMusic ;
+    private final Frank game;
+    private Rectangle leftButtonRectangle, rightButtonRectangle, upButtonRectangle;
 
-
-    public PlayScreen(Frank game, int currentLevel) {
+    public PlayScreen(Frank game) {
         /* Sprites atlas */
         atlas = new TextureAtlas("Sprites/frank.atlas");
 
@@ -78,12 +81,13 @@ public class PlayScreen implements Screen {
         timeCount = 0.f;
 
         /* Game */
+        this.game = game;
         this.gameBatch = game.batch;
         this.gameCam = new OrthographicCamera();
-        this.gamePort = new FitViewport(Frank.V_WIDTH / Frank.PPM, Frank.V_HEIGHT / Frank.PPM, gameCam );
+        this.gamePort = new FillViewport(Frank.V_WIDTH / Frank.PPM, Frank.V_HEIGHT / Frank.PPM, gameCam );
         gameCam.position.set(gamePort.getWorldWidth() / 2.f, gamePort.getWorldHeight() / 2.f, 0);
 
-        PlayScreen.currentLevel = currentLevel;
+        PlayScreen.currentLevel = 1;
 
         /* HUD */
         hud = new HUD(game.batch);
@@ -116,6 +120,7 @@ public class PlayScreen implements Screen {
         initFont();
         initIntro();
         initEnding();
+        initRetryButton();
     }
 
     private void initFont() {
@@ -151,53 +156,28 @@ public class PlayScreen implements Screen {
         );
     }
 
+    private Rectangle getBoundingRectangle(ImageButton button) {
+        Vector2 coords = new Vector2(button.getX(), button.getY());
+        return new Rectangle(coords.x, coords.y, button.getWidth(), button.getHeight());
+    }
+
     private void initInteractButtons() {
         ImageButton leftButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-left.png"))));
         ImageButton rightButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-right.png"))));
         ImageButton upButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-up.png"))));
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.bottom();
-        table.add(leftButton).colspan(1).expandX().padBottom(40).padLeft(50);
-        table.add(rightButton).colspan(1).expandX().padBottom(40);
-        table.add(upButton).colspan(15).expandX().align(Align.right).padRight(100).padBottom(10);
+        leftButton.setPosition(100,  50);
+        rightButton.setPosition(130 + leftButton.getWidth(), 50);
+        upButton.setPosition(Gdx.graphics.getWidth() - upButton.getWidth() - 100,  50);
 
         interactStage = new Stage();
-        interactStage.addActor(table);
+        interactStage.addActor(leftButton);
+        interactStage.addActor(rightButton);
+        interactStage.addActor(upButton);
 
-        leftButton.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if(Player.currentState != Player.State.DEAD && player.b2body.getLinearVelocity().x <= 2) {
-                    player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        rightButton.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if(Player.currentState != Player.State.DEAD && player.b2body.getLinearVelocity().x >= -2) {
-                    player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        upButton.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if(Player.currentState != Player.State.DEAD && player.b2body.getLinearVelocity().y == 0) {
-                    player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
-                    return true;
-                }
-                return false;
-            }
-        });
+        leftButtonRectangle = getBoundingRectangle(leftButton);
+        rightButtonRectangle = getBoundingRectangle(rightButton);
+        upButtonRectangle = getBoundingRectangle(upButton);
     }
 
     private void initReplayButton() {
@@ -211,6 +191,8 @@ public class PlayScreen implements Screen {
             @Override
             public boolean handle(Event event) {
                 // Restart game
+                outroMusic.stop();
+                game.reset();
                 return true;
             }
         });
@@ -228,8 +210,29 @@ public class PlayScreen implements Screen {
             @Override
             public boolean handle(Event event) {
                 resetTimeCount();
+                introMusic.stop();
+                introMusic.setPosition(0.f);
+                backgroundMusic.play();
                 currentState = State.RUNNING;
                 Gdx.input.setInputProcessor(interactStage);
+                return true;
+            }
+        });
+    }
+
+    private void initRetryButton() {
+        ImageButton button =  new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/replay.png"))));
+        Table table = new Table();
+        table.setFillParent(true);
+        table.bottom().padBottom(40).add(button).align(Align.center);
+        gameOverStage = new Stage();
+        gameOverStage.addActor(table);
+        button.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                // Restart game
+                outroMusic.stop();
+                game.reset();
                 return true;
             }
         });
@@ -238,12 +241,26 @@ public class PlayScreen implements Screen {
     public void nextLevel() {
         currentLevel++;
         player.updateBody();
+        if(currentLevel == 5) {
+            backgroundMusic.stop();
+            backgroundMusic.setPosition(0.f);
+            finalLevelMusic.play();
+        }
     }
 
     private void initMusic() {
-        Music music = Frank.manager.get("Sounds/background.mp3", Music.class);
-        music.setLooping(true);
-        music.play();
+        introMusic = Frank.manager.get("Sounds/intro.mp3", Music.class);
+        introMusic.setLooping(true);
+        introMusic.play();
+
+        backgroundMusic = Frank.manager.get("Sounds/background.mp3", Music.class);
+        backgroundMusic.setLooping(true);
+
+        finalLevelMusic = Frank.manager.get("Sounds/final-level.mp3", Music.class);
+        finalLevelMusic.setLooping(true);
+
+        outroMusic = Frank.manager.get("Sounds/final.mp3", Music.class);
+        outroMusic.setLooping(true);
     }
 
     public Rectangle getCage() {
@@ -265,7 +282,9 @@ public class PlayScreen implements Screen {
     public void handleInput() {
         if(Player.currentState != Player.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().y == 0) {
+                Frank.manager.get("Sounds/jump.wav", Sound.class).play();
                 player.b2body.applyLinearImpulse(new Vector2(0, 4.5f), player.b2body.getWorldCenter(), true);
+                Player.isJumping = true;
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().x <= 2) {
@@ -274,6 +293,27 @@ public class PlayScreen implements Screen {
 
             if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().x >= -2) {
                 player.b2body.applyLinearImpulse(new Vector2(-0.3f, 0), player.b2body.getWorldCenter(), true);
+            }
+
+            if(Gdx.input.isTouched()) {
+                Vector2 point = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+                // gameCam.unproject(point.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+                Gdx.app.log("Point position x", String.valueOf(point.x));
+                Gdx.app.log("Point position y", String.valueOf(point.y));
+                if(leftButtonRectangle.contains(point.x, point.y) && player.b2body.getLinearVelocity().x >= -2) {
+                    player.b2body.applyLinearImpulse(new Vector2(-0.3f, 0), player.b2body.getWorldCenter(), true);
+                }
+
+                if(rightButtonRectangle.contains(point.x, point.y) && player.b2body.getLinearVelocity().x <= 2) {
+                    player.b2body.applyLinearImpulse(new Vector2(0.3f, 0), player.b2body.getWorldCenter(), true);
+                }
+
+                if(upButtonRectangle.contains(point.x, point.y) && player.b2body.getLinearVelocity().y == 0) {
+                    Frank.manager.get("Sounds/jump.wav", Sound.class).play();
+                    player.b2body.applyLinearImpulse(new Vector2(0, 4.5f), player.b2body.getWorldCenter(), true);
+                    Player.isJumping = true;
+                }
+
             }
         }
     }
@@ -285,14 +325,22 @@ public class PlayScreen implements Screen {
                 player.update(dt);
                 if (Player.currentState == Player.State.DEAD) {
                     this.currentState = State.GAME_OVER;
+                    PlayScreen.backgroundMusic.stop();
+                    PlayScreen.backgroundMusic.setPosition(0.f);
+                    PlayScreen.finalLevelMusic.stop();
+                    PlayScreen.finalLevelMusic.setPosition(0.f);
+                    Frank.manager.get("Sounds/dead.mp3", Sound.class).play();
                 }
                 hud.update(dt);
                 world.step(1 / 60.f, 6, 2);
-                if(player.b2body.getPosition().x >= Gdx.graphics.getWidth() / Frank.PPM / 2.f) {
-                    gameCam.position.x = player.b2body.getPosition().x;
-                    gameCam.update();
+                if(player.b2body.getPosition().x + 28.f / Frank.PPM >= gamePort.getWorldWidth() / 2.f) {
+                        gameCam.position.x = player.b2body.getPosition().x + 28.f / Frank.PPM;
+                        gameCam.update();
                 }
                 renderer.setView(gameCam);
+                break;
+            case GAME_OVER:
+                Gdx.input.setInputProcessor(gameOverStage);
                 break;
             case PROLOG:
                 timeCount += dt;
@@ -333,10 +381,12 @@ public class PlayScreen implements Screen {
                 gameBatch.begin();
                 GlyphLayout layout = new GlyphLayout();
                 layout.setText(gameOverFont, "GAME OVER");
-                float width = layout.width;
-                float height = layout.height;
-                this.gameOverFont.draw(gameBatch, "GAME OVER", (Gdx.graphics.getWidth() - width) / 2.f, (Gdx.graphics.getHeight() - height)/2.f);
+                this.gameOverFont.draw(gameBatch, "GAME OVER", (Gdx.graphics.getWidth() - layout.width) / 2.f, (Gdx.graphics.getHeight() - layout.height)/2.f + 150);
+                layout.setText(endFont, Player.deathCause);
+                this.endFont.draw(gameBatch, Player.deathCause, (Gdx.graphics.getWidth() - layout.width) / 2.f, (Gdx.graphics.getHeight() - layout.height) / 2.f);
                 gameBatch.end();
+                gameOverStage.act(Gdx.graphics.getDeltaTime());
+                gameOverStage.draw();
                 break;
             case PROLOG:
                 gameBatch.begin();
@@ -373,6 +423,9 @@ public class PlayScreen implements Screen {
 
                 if(timeCount >= 27) {
                     currentState = State.RUNNING;
+                    introMusic.stop();
+                    introMusic.setPosition(0.f);
+                    backgroundMusic.play();
                     resetTimeCount();
                 }
                 gameBatch.end();
@@ -410,7 +463,7 @@ public class PlayScreen implements Screen {
 
                 if(timeCount >= 22) {
                     layout.setText(gameOverFont, endText.get(5));
-                    this.gameOverFont.draw(gameBatch, endText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 150);
+                    this.gameOverFont.draw(gameBatch, endText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 100);
                 }
                 gameBatch.end();
 
@@ -455,5 +508,9 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        introMusic.dispose();
+        outroMusic.dispose();
+        finalLevelMusic.dispose();
+        backgroundMusic.dispose();
     }
 }
