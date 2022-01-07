@@ -7,12 +7,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -25,9 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.frankthefrog.game.Frank;
 import com.frankthefrog.game.Scenes.HUD;
@@ -35,6 +32,7 @@ import com.frankthefrog.game.Sprites.Cage;
 import com.frankthefrog.game.Sprites.Lili;
 import com.frankthefrog.game.Sprites.Player;
 import com.frankthefrog.game.Tools.B2WorldCreator;
+import com.frankthefrog.game.Tools.ButtonManager;
 import com.frankthefrog.game.Tools.WorldContactListener;
 
 import java.util.Arrays;
@@ -51,7 +49,6 @@ public class PlayScreen implements Screen {
     private final Viewport gamePort;
     private final TextureAtlas atlas;
     private final World world;
-    public final TiledMap map;
     private float timeCount;
     private final OrthogonalTiledMapRenderer renderer;
     private BitmapFont gameOverFont, introFont, endFont;
@@ -71,7 +68,7 @@ public class PlayScreen implements Screen {
     private Stage interactStage, skipStage, replayStage, gameOverStage;
     public static Music introMusic, backgroundMusic,finalLevelMusic, outroMusic ;
     private final Frank game;
-    private Rectangle leftButtonRectangle, rightButtonRectangle, upButtonRectangle;
+    private Rectangle leftButtonRectangle, rightButtonRectangle;
 
     public PlayScreen(Frank game) {
         /* Sprites atlas */
@@ -84,9 +81,10 @@ public class PlayScreen implements Screen {
         this.game = game;
         this.gameBatch = game.batch;
         this.gameCam = new OrthographicCamera();
-        this.gamePort = new FillViewport(Frank.V_WIDTH / Frank.PPM, Frank.V_HEIGHT / Frank.PPM, gameCam );
+        this.gamePort = new FitViewport(Frank.V_WIDTH / Frank.PPM, Frank.V_HEIGHT / Frank.PPM, gameCam );
         gameCam.position.set(gamePort.getWorldWidth() / 2.f, gamePort.getWorldHeight() / 2.f, 0);
 
+        /* Current Level */
         PlayScreen.currentLevel = 1;
 
         /* HUD */
@@ -94,11 +92,9 @@ public class PlayScreen implements Screen {
 
         /* Current State */
         this.currentState = State.PROLOG;
-        //this.currentState = State.RUNNING;
 
         /* Map renderer */
-        map = new TmxMapLoader().load("Levels/map.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / Frank.PPM);
+        renderer = new OrthogonalTiledMapRenderer(new TmxMapLoader().load("Levels/map.tmx"), 1 / Frank.PPM);
 
         /* World */
         world = new World(new Vector2(0, -10.f), true);
@@ -108,7 +104,7 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
         b2dr.setDrawBodies(false);
 
-        new B2WorldCreator(this);
+        B2WorldCreator.createWorld(this);
         lili = new Lili(this);
         cage = new Cage(this);
         player = new Player(this);
@@ -139,36 +135,36 @@ public class PlayScreen implements Screen {
                 "INTRO",
                 "It was a beautiful, sunny day",
                 "Frank the frog and Lili the lizard were walking down the road",
-                "Suddenly, when nobody was watching, LiLi disappeared into a sewer",
-                "Frank called her out repeatedly, but he didn't get any response",
-                "Now it's his duty to go to save her"
+                "When nobody was watching, Lili disappeared into a sewer",
+                "Frank called her repeatedly, but he didn't get any response",
+                "Now it's his duty to go save her"
         );
     }
 
     private void initEnding() {
         this.endText = Arrays.asList(
                 "END",
-                "Frank was very happy to meet Lili and to set her free",
-                "She told him, she was kidnapped by an unknown person and locked up in a cage",
-                "The kidnapper told her that he would free her for a certain sum of money",
-                "Soon after they found a way out of the sewer and continued their walk",
+                "Frank was very happy to find Lili unharmed",
+                "He found out that she was kidnapped by a stranger",
+                "And that she would have been released for a sum of money ",
+                "Soon after they found a way out and continued their walk",
                 "THANKS FOR PLAYING!"
         );
     }
 
     private Rectangle getBoundingRectangle(ImageButton button) {
-        Vector2 coords = new Vector2(button.getX(), button.getY());
-        return new Rectangle(coords.x, coords.y, button.getWidth(), button.getHeight());
+        return new Rectangle(button.getX(), button.getY(), button.getWidth(), button.getHeight());
     }
 
-    private void initInteractButtons() {
-        ImageButton leftButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-left.png"))));
-        ImageButton rightButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-right.png"))));
-        ImageButton upButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/arrow-up.png"))));
 
-        leftButton.setPosition(100,  50);
-        rightButton.setPosition(130 + leftButton.getWidth(), 50);
-        upButton.setPosition(Gdx.graphics.getWidth() - upButton.getWidth() - 100,  50);
+    private void initInteractButtons() {
+        ImageButton leftButton = ButtonManager.leftButton();
+        ImageButton rightButton = ButtonManager.rightButton();
+        ImageButton upButton = ButtonManager.upButton();
+
+        leftButton.setPosition(50,  50);
+        rightButton.setPosition( 50 + leftButton.getWidth() + 25, 50);
+        upButton.setPosition(Gdx.graphics.getWidth() - upButton.getWidth() - 25,  50);
 
         interactStage = new Stage();
         interactStage.addActor(leftButton);
@@ -177,36 +173,57 @@ public class PlayScreen implements Screen {
 
         leftButtonRectangle = getBoundingRectangle(leftButton);
         rightButtonRectangle = getBoundingRectangle(rightButton);
-        upButtonRectangle = getBoundingRectangle(upButton);
+
+        upButton.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                if(player.b2body.getLinearVelocity().y == 0) {
+                    Frank.manager.get("Sounds/jump.wav", Sound.class).play();
+                    player.b2body.applyLinearImpulse(new Vector2(0, 4.5f), player.b2body.getWorldCenter(), true);
+                    Player.isJumping = true;
+                }
+                return true;
+            }
+        });
     }
 
     private void initReplayButton() {
-        ImageButton button =  new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/replay.png"))));
-        Table table = new Table();
-        table.setFillParent(true);
-        table.bottom().padBottom(40).add(button).align(Align.center);
+        ImageButton replayButton = ButtonManager.replayButton();
+        ImageButton closeButton = ButtonManager.closeButton();
+
+        replayButton.setPosition((Gdx.graphics.getWidth() - replayButton.getWidth()) / 2.f, 25);
+        closeButton.setPosition(Gdx.graphics.getWidth() - closeButton.getWidth() - 25, Gdx.graphics.getHeight() - closeButton.getHeight() - 25);
+
         replayStage = new Stage();
-        replayStage.addActor(table);
-        button.addListener(new EventListener() {
+        replayStage.addActor(closeButton);
+        replayStage.addActor(replayButton);
+        replayButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                // Restart game
                 outroMusic.stop();
                 game.reset();
+                return true;
+            }
+        });
+
+        closeButton.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                Gdx.app.exit();
                 return true;
             }
         });
     }
 
     private void initSkipButton() {
-        ImageButton button =  new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/skip.png"))));
+        ImageButton skipButton =  ButtonManager.skipButton();
         Table table = new Table();
         table.setFillParent(true);
-        table.bottom().padBottom(40).add(button).align(Align.right).padRight(50);
+        table.bottom().padBottom(30).add(skipButton).align(Align.right).padRight(30);
         skipStage = new Stage();
         skipStage.addActor(table);
         Gdx.input.setInputProcessor(skipStage);
-        button.addListener(new EventListener() {
+        skipButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 resetTimeCount();
@@ -221,18 +238,29 @@ public class PlayScreen implements Screen {
     }
 
     private void initRetryButton() {
-        ImageButton button =  new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("UI/replay.png"))));
-        Table table = new Table();
-        table.setFillParent(true);
-        table.bottom().padBottom(40).add(button).align(Align.center);
+        ImageButton retryButton =  ButtonManager.replayButton();
+        ImageButton closeButton = ButtonManager.closeButton();
+
+        retryButton.setPosition((Gdx.graphics.getWidth() - retryButton.getWidth()) / 2.f, 25);
+        closeButton.setPosition(Gdx.graphics.getWidth() - closeButton.getWidth() - 25, Gdx.graphics.getHeight() - closeButton.getHeight() - 25);
+
         gameOverStage = new Stage();
-        gameOverStage.addActor(table);
-        button.addListener(new EventListener() {
+        gameOverStage.addActor(retryButton);
+        gameOverStage.addActor(closeButton);
+        retryButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 // Restart game
                 outroMusic.stop();
                 game.reset();
+                return true;
+            }
+        });
+
+        closeButton.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                Gdx.app.exit();
                 return true;
             }
         });
@@ -275,6 +303,10 @@ public class PlayScreen implements Screen {
         return this.atlas;
     }
 
+    public TiledMap getMap() {
+        return this.renderer.getMap();
+    }
+
     public void resetTimeCount() {
         this.timeCount = 0.f;
     }
@@ -297,23 +329,15 @@ public class PlayScreen implements Screen {
 
             if(Gdx.input.isTouched()) {
                 Vector2 point = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-                // gameCam.unproject(point.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-                Gdx.app.log("Point position x", String.valueOf(point.x));
-                Gdx.app.log("Point position y", String.valueOf(point.y));
+                // Move Left
                 if(leftButtonRectangle.contains(point.x, point.y) && player.b2body.getLinearVelocity().x >= -2) {
                     player.b2body.applyLinearImpulse(new Vector2(-0.3f, 0), player.b2body.getWorldCenter(), true);
                 }
 
+                // Moving Right
                 if(rightButtonRectangle.contains(point.x, point.y) && player.b2body.getLinearVelocity().x <= 2) {
                     player.b2body.applyLinearImpulse(new Vector2(0.3f, 0), player.b2body.getWorldCenter(), true);
                 }
-
-                if(upButtonRectangle.contains(point.x, point.y) && player.b2body.getLinearVelocity().y == 0) {
-                    Frank.manager.get("Sounds/jump.wav", Sound.class).play();
-                    player.b2body.applyLinearImpulse(new Vector2(0, 4.5f), player.b2body.getWorldCenter(), true);
-                    Player.isJumping = true;
-                }
-
             }
         }
     }
@@ -394,33 +418,41 @@ public class PlayScreen implements Screen {
                 float deviceWidth = Gdx.graphics.getWidth();
                 float deviceHeight= Gdx.graphics.getHeight();
 
-                layout.setText(gameOverFont, introText.get(0)); // INTRO
-                this.gameOverFont.draw(gameBatch, introText.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 15.f);
+                // "INTRO"
+                layout.setText(gameOverFont, introText.get(0));
+                this.gameOverFont.draw(gameBatch, introText.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 5.f);
+
+                // "It was a beautiful, sunny day"
                 if(timeCount >= 2) {
                     layout.setText(introFont, introText.get(1));
                     this.introFont.draw(gameBatch, introText.get(1), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 + 2 * 102);
                 }
 
+                //"Frank the frog and Lili the lizard were walking down the road",
                 if(timeCount >= 7) {
                     layout.setText(introFont, introText.get(2));
                     this.introFont.draw(gameBatch, introText.get(2), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 +  100);
                 }
 
+                //"When nobody was watching, Lili disappeared into a sewer"
                 if(timeCount >= 12) {
                     layout.setText(introFont, introText.get(3));
                     this.introFont.draw(gameBatch, introText.get(3), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 );
                 }
 
+                // "Frank called her repeatedly, but he didn't get any response",
                 if(timeCount >= 17) {
                     layout.setText(introFont, introText.get(4));
                     this.introFont.draw(gameBatch, introText.get(4), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 100);
                 }
 
+                // "Now it's his duty to go save her"
                 if(timeCount >= 22) {
                     layout.setText(introFont, introText.get(5));
                     this.introFont.draw(gameBatch, introText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 100);
                 }
 
+                // Finish Intro
                 if(timeCount >= 27) {
                     currentState = State.RUNNING;
                     introMusic.stop();
@@ -439,8 +471,8 @@ public class PlayScreen implements Screen {
                 deviceWidth = Gdx.graphics.getWidth();
                 deviceHeight= Gdx.graphics.getHeight();
 
-                layout.setText(gameOverFont, endText.get(0)); // INTRO
-                this.gameOverFont.draw(gameBatch, endText.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 15.f);
+                layout.setText(gameOverFont, endText.get(0));
+                this.gameOverFont.draw(gameBatch, endText.get(0), (deviceWidth -  layout.width) / 2, deviceHeight - layout.height - 5.f);
                 if(timeCount >= 2) {
                     layout.setText(endFont, endText.get(1));
                     this.endFont.draw(gameBatch, endText.get(1), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 + 2 * 100);
@@ -463,7 +495,7 @@ public class PlayScreen implements Screen {
 
                 if(timeCount >= 22) {
                     layout.setText(gameOverFont, endText.get(5));
-                    this.gameOverFont.draw(gameBatch, endText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 2 * 100);
+                    this.gameOverFont.draw(gameBatch, endText.get(5), (deviceWidth - layout.width) / 2, (deviceHeight - layout.height) / 2 - 160);
                 }
                 gameBatch.end();
 
@@ -503,7 +535,6 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         world.destroyBody(player.b2body);
-        map.dispose();
         renderer.dispose();
         world.dispose();
         b2dr.dispose();

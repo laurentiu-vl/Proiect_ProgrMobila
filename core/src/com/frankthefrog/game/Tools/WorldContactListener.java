@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.frankthefrog.game.Frank;
-import com.frankthefrog.game.Screens.PlayScreen;
 import com.frankthefrog.game.Sprites.Coin;
 import com.frankthefrog.game.Sprites.Door;
 import com.frankthefrog.game.Sprites.Heart;
@@ -25,89 +24,62 @@ public class WorldContactListener implements ContactListener {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
-        Player player;
-        if(fixA.getFilterData().categoryBits == Frank.PLAYER_BIT || fixA.getFilterData().categoryBits == Frank.POWER_UP_BIT || fixA.getFilterData().categoryBits == Frank.HEAD_BIT)
-            player = (Player)(fixA.getUserData());
-        else
-            player = (Player)(fixB.getUserData());
-
+        Player player = (fixA.getFilterData().categoryBits == Frank.PLAYER_BIT ||
+                         fixA.getFilterData().categoryBits == Frank.POWER_UP_BIT ||
+                         fixA.getFilterData().categoryBits == Frank.BOTTOM_BIT) ? (Player)(fixA.getUserData()) : (Player)(fixB.getUserData());
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         switch(cDef) {
             case Frank.PLAYER_BIT | Frank.DOOR_BIT:
                 Gdx.app.log("Contact", "Touched door");
-
-                if(fixA.getFilterData().categoryBits == Frank.DOOR_BIT)
-                    ((Door) fixA.getUserData()).onHit();
-                else
-                    ((Door) fixB.getUserData()).onHit();
+                Door door = (fixA.getFilterData().categoryBits == Frank.DOOR_BIT) ? (Door) fixA.getUserData() : (Door) fixB.getUserData();
+                door.onHit();
                 break;
             case Frank.POWER_UP_BIT | Frank.STAR_BIT:
-                if(fixA.getFilterData().categoryBits == Frank.STAR_BIT)
-                    ((Star) fixA.getUserData()).onHit();
-                else
-                    ((Star) fixB.getUserData()).onHit();
+                Gdx.app.log("Contact", "Touched star");
+                Star star = (fixA.getFilterData().categoryBits == Frank.STAR_BIT) ? (Star) fixA.getUserData() : (Star) fixB.getUserData();
+                star.onHit();
                 break;
             case Frank.PLAYER_BIT | Frank.SPIKE_BIT:
                 Gdx.app.log("Contact", "Touched spikes");
-                if(fixA.getFilterData().categoryBits == Frank.SPIKE_BIT)
-                    ((Spike) fixA.getUserData()).onHit();
-                else
-                    ((Spike) fixB.getUserData()).onHit();
+                Spike spike = (fixA.getFilterData().categoryBits == Frank.SPIKE_BIT) ? (Spike) fixA.getUserData() : (Spike) fixB.getUserData();
+                spike.onHit();
                 player.b2body.setLinearVelocity(player.b2body.getLinearVelocity().x, 0);
                 player.b2body.applyLinearImpulse(new Vector2(0.f, 4.f), player.b2body.getWorldCenter(), true);
                 break;
             case Frank.POWER_UP_BIT | Frank.HEART_BIT:
                 Gdx.app.log("Contact", "Touched heart");
-                if(fixA.getFilterData().categoryBits == Frank.HEART_BIT)
-                    ((Heart) fixA.getUserData()).onHit();
-                else
-                    ((Heart) fixB.getUserData()).onHit();
+                Heart heart = (fixA.getFilterData().categoryBits == Frank.HEART_BIT) ? (Heart) fixA.getUserData() : (Heart) fixB.getUserData();
+                heart.onHit();
                 break;
             case Frank.POWER_UP_BIT | Frank.LIGHTNING_BIT:
                 Gdx.app.log("Contact", "Touched lightning");
-                if(fixA.getFilterData().categoryBits == Frank.LIGHTNING_BIT)
-                    ((Lightning) fixA.getUserData()).onHit();
-                else
-                    ((Lightning) fixB.getUserData()).onHit();
+                Lightning lightning = (fixA.getFilterData().categoryBits == Frank.LIGHTNING_BIT) ? (Lightning) fixA.getUserData() : (Lightning) fixB.getUserData();
+                lightning.onHit();
                 break;
             case Frank.POWER_UP_BIT | Frank.COIN_BIT:
                 Gdx.app.log("Contact", "Touched coins");
-                if(fixA.getFilterData().categoryBits == Frank.COIN_BIT)
-                    ((Coin) fixA.getUserData()).onHit();
-                else
-                    ((Coin) fixB.getUserData()).onHit();
+                Coin coin = (fixA.getFilterData().categoryBits == Frank.COIN_BIT) ? (Coin) fixA.getUserData() : (Coin) fixB.getUserData();
+                coin.onHit();
                 break;
-            case Frank.HEAD_BIT | Frank.TRAMPOLINE_BIT:
+            case Frank.BOTTOM_BIT | Frank.TRAMPOLINE_BIT:
                 Gdx.app.log("Contact", "Touched trampolines");
-                Trampoline tramp;
-                if(fixA.getFilterData().categoryBits == Frank.TRAMPOLINE_BIT)
-                    tramp = (Trampoline) (fixA.getUserData());
+                Trampoline tramp = (fixA.getFilterData().categoryBits == Frank.TRAMPOLINE_BIT) ? (Trampoline) (fixA.getUserData()) : (Trampoline) (fixB.getUserData());
+                player.b2body.setLinearVelocity(player.b2body.getLinearVelocity().x, 0.f);
+                Player.isJumping = true;
+                tramp.onHit();
+                if(tramp.object.getProperties().containsKey("half"))
+                    player.b2body.applyLinearImpulse(new Vector2(0f,6.5f), player.b2body.getWorldCenter(), true);
                 else
-                    tramp = (Trampoline) (fixB.getUserData());
-
-              //  float playerPos  = player.b2body.getPosition().x ;
-               // float trampPos = tramp.body.getPosition().x;
-
-               // if(player.b2body.getPosition().y >= tramp.body.getPosition().y + 50.f / Frank.PPM ||
-               //         (player.b2body.getLinearVelocity().y < 0 && playerPos <= trampPos  + 64.f / Frank.PPM && playerPos + 56.f / Frank.PPM >=  trampPos )) {
-                    player.b2body.setLinearVelocity(player.b2body.getLinearVelocity().x, 0.f);
-                    Player.isJumping = true;
-                    tramp.onHit();
-                    if(tramp.object.getProperties().containsKey("half"))
-                        player.b2body.applyLinearImpulse(new Vector2(0f,6.5f), player.b2body.getWorldCenter(), true);
-                    else
-                        player.b2body.applyLinearImpulse(new Vector2(0f,8.5f), player.b2body.getWorldCenter(), true);
+                    player.b2body.applyLinearImpulse(new Vector2(0f,8.5f), player.b2body.getWorldCenter(), true);
                 break;
             case Frank.POWER_UP_BIT | Frank.KEY_BIT:
                 Gdx.app.log("Contact", "Touched key");
-                if(fixA.getFilterData().categoryBits == Frank.KEY_BIT)
-                    ((Key) fixA.getUserData()).onHit();
-                else
-                    ((Key) fixB.getUserData()).onHit();
+                Key key = (fixA.getFilterData().categoryBits == Frank.KEY_BIT) ? (Key) fixA.getUserData() : (Key) fixB.getUserData();
+                key.onHit();
                 break;
-            case Frank.HEAD_BIT | Frank.GROUND_BIT:
-                Gdx.app.log("Contact", "Touched with head");
+            case Frank.BOTTOM_BIT | Frank.GROUND_BIT:
+                Gdx.app.log("Contact", "Touched ground");
                 Player.isJumping = false;
                 break;
             default:

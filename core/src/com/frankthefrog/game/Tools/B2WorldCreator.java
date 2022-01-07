@@ -28,11 +28,12 @@ import java.util.List;
 public class B2WorldCreator {
     public static List<Wall> walls = new ArrayList<>();
 
-    public B2WorldCreator(PlayScreen screen) {
+    public static void createWorld(PlayScreen screen) {
         World world = screen.getWorld();
-        TiledMap map = screen.map;
+        TiledMap map = screen.getMap();
 
         BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.StaticBody;
         PolygonShape p_shape = new PolygonShape();
         CircleShape c_shape = new CircleShape();
         FixtureDef fdef = new FixtureDef();
@@ -43,7 +44,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/ Frank.PPM, (rect.getY() + rect.getHeight()/2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -56,7 +56,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/ Frank.PPM, (rect.getY() + rect.getHeight()/2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -70,7 +69,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/Frank.PPM, (rect.getY() + rect.getHeight() /2.f - 4.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -84,7 +82,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth() /2.f + 2.f)/Frank.PPM, (rect.getY() + rect.getHeight() /2.f - 10.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -97,7 +94,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth() /2.f)/Frank.PPM, (rect.getY() + rect.getHeight() /2.f + 2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -110,7 +106,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth() /2.f)/Frank.PPM, (rect.getY() + rect.getHeight() /2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -123,7 +118,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth() /2.f)/Frank.PPM, (rect.getY() + rect.getHeight() /2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -136,7 +130,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/Frank.PPM, (rect.getY() + rect.getHeight()/2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -150,7 +143,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth() / 2.f)/Frank.PPM, (rect.getY() + rect.getHeight()/2.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -163,7 +155,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/ Frank.PPM, (rect.getY() + rect.getHeight()/2.f - 1.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -176,7 +167,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/ Frank.PPM, (rect.getY() + rect.getHeight()/4.f)/Frank.PPM);
             body = world.createBody(bdef);
 
@@ -189,7 +179,6 @@ public class B2WorldCreator {
         for(MapObject object: map.getLayers().get(13).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set((rect.getX() + rect.getWidth()/2.f)/Frank.PPM, (rect.getY() + 3.f * rect.getHeight()/4.f)/Frank.PPM);
             body = world.createBody(bdef);
 

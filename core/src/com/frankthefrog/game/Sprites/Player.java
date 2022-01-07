@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Player extends Sprite {
     public enum State { JUMPING, STANDING, RUNNING, DEAD}
-    public static State currentState, previousState;
+    public static State currentState;
     public World world;
     public List<Body> b2bodies = new ArrayList<>();
     public Body b2body ;
@@ -30,19 +30,16 @@ public class Player extends Sprite {
     private final TextureRegion frankJump;
     private boolean runningRight;
     public static boolean isDead, isJumping;
-    private float stateTimer;
     public static String deathCause;
 
     public Player(PlayScreen screen) {
-
         super(screen.getAtlas().findRegion("moving"));
         this.world = screen.getWorld();
         currentState = State.STANDING;
-        previousState = State.STANDING;
-        stateTimer = 0.f;
         runningRight = true;
         this.screen = screen;
         isJumping = true;
+        isDead = false;
 
         // Add Textures
         frankIdle = new TextureRegion(screen.getAtlas().findRegion("moving"), 0, 0, 60, 60);
@@ -60,8 +57,6 @@ public class Player extends Sprite {
             this.b2bodies.add(world.createBody(bdef));
         }
 
-        isDead = false;
-
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(28 / Frank.PPM);
@@ -76,24 +71,19 @@ public class Player extends Sprite {
             b2bodies.get(i).createFixture(fdef).setUserData(this);
 
         fdef.filter.categoryBits = Frank.POWER_UP_BIT;
-        fdef.filter.maskBits = Frank.COIN_BIT |
-                               Frank.STAR_BIT |
-                               Frank.KEY_BIT |
-                               Frank.LIGHTNING_BIT |
-                               Frank.HEART_BIT;
+        fdef.filter.maskBits = Frank.COIN_BIT | Frank.STAR_BIT | Frank.KEY_BIT | Frank.LIGHTNING_BIT | Frank.HEART_BIT;
         fdef.isSensor = true;
         for(int i = 0; i < 5; i++)
             b2bodies.get(i).createFixture(fdef).setUserData(this);
 
         EdgeShape bottom = new EdgeShape();
         bottom.set(new Vector2(-20.f / Frank.PPM, -28.f / Frank.PPM), new Vector2(20.f / Frank.PPM, -28.f / Frank.PPM));
-        fdef.filter.categoryBits = Frank.HEAD_BIT;
+        fdef.filter.categoryBits = Frank.BOTTOM_BIT;
         fdef.filter.maskBits = Frank.GROUND_BIT | Frank.TRAMPOLINE_BIT ;
         fdef.shape = bottom;
         fdef.isSensor = true;
-        for(int i =0; i < 5; i++) {
+        for(int i =0; i < 5; i++)
             b2bodies.get(i).createFixture(fdef).setUserData(this);
-        }
         b2body = b2bodies.get(0);
     }
 
@@ -103,7 +93,6 @@ public class Player extends Sprite {
 
     public TextureRegion getFrame(float dt) {
         currentState = getState();
-
         TextureRegion region;
         switch(currentState) {
             case JUMPING:
@@ -112,7 +101,7 @@ public class Player extends Sprite {
                 break;
             case RUNNING:
                 HUD.addEnergy(-1.5f * dt);
-                region = frankIdle;// frankWalk.getKeyFrame(stateTimer, true);
+                region = frankIdle;
                 break;
             case STANDING:
             case DEAD:
@@ -128,9 +117,6 @@ public class Player extends Sprite {
             region.flip(true, false);
             runningRight = true;
         }
-
-        stateTimer = currentState == previousState ? stateTimer + dt : 0;
-        previousState = currentState;
         return region;
     }
 

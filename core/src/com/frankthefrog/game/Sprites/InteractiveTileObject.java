@@ -25,7 +25,7 @@ public abstract class InteractiveTileObject {
     public InteractiveTileObject(PlayScreen screen, MapObject object, Body body, FixtureDef fdef) {
         this.screen = screen;
         this.world = screen.getWorld();
-        this.map = screen.map;
+        this.map = screen.getMap();
         this.object = object;
         this.bounds = ((RectangleMapObject) object).getRectangle();
         this.body = body;

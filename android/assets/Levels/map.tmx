@@ -344,7 +344,7 @@
   <object id="210" x="5120" y="240" width="80" height="80"/>
   <object id="435" x="8960" y="480" width="80" height="80"/>
  </objectgroup>
- <objectgroup id="8" name="Tranbuline">
+ <objectgroup id="8" name="Trampolines">
   <object id="29" x="960" y="640" width="80" height="80"/>
   <object id="67" x="320" y="880" width="80" height="80"/>
   <object id="71" x="560" y="640" width="80" height="80"/>
@@ -511,14 +511,14 @@
   <object id="511" x="10320" y="320" width="80" height="80"/>
   <object id="512" x="10320" y="400" width="80" height="80"/>
  </objectgroup>
- <objectgroup id="14" name="Key">
+ <objectgroup id="14" name="Keys">
   <object id="39" x="80" y="880" width="80" height="80"/>
   <object id="166" x="2320" y="160" width="80" height="80"/>
   <object id="239" x="3680" y="560" width="80" height="80"/>
   <object id="278" x="5360" y="240" width="80" height="80"/>
   <object id="492" x="7680" y="480" width="80" height="80"/>
  </objectgroup>
- <objectgroup id="15" name="Thornes">
+ <objectgroup id="15" name="Spikes">
   <object id="40" x="320" y="1040" width="400" height="80"/>
   <object id="158" x="3280" y="960" width="80" height="80"/>
   <object id="159" x="2640" y="1040" width="80" height="80"/>

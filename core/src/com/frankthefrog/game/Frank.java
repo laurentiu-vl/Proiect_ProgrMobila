@@ -1,7 +1,6 @@
 package com.frankthefrog.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -26,7 +25,7 @@ public class Frank extends Game {
 	public static final short KEY_BIT = 512;
 	public static final short DOOR_BIT = 1024;
 	public static final short POWER_UP_BIT = 2048;
-	public static final short HEAD_BIT = 4096;
+	public static final short BOTTOM_BIT = 4096;
 
 	public static AssetManager manager;
 
@@ -34,7 +33,6 @@ public class Frank extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		manager = new AssetManager();
-		// Load music and sounds
 		manager.load("Sounds/background.mp3", Music.class);
 		manager.load("Sounds/coins.wav", Sound.class);
 		manager.load("Sounds/dead.mp3", Sound.class);
